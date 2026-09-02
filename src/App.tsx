@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import type { BusinessCard, MediaItem, AppSettings, OCRResult } from './types';
 import {
+  getUsageStats,
+  incrementScansUsed,
+  setProUserStatus,
+  resetScansForTesting,
   getAllCards,
   saveCard,
   deleteCard,
@@ -22,6 +26,7 @@ import { ScannerModal } from './components/ScannerModal';
 import { ReviewCardModal } from './components/ReviewCardModal';
 import { CardDetailModal } from './components/CardDetailModal';
 import { QuickAttachModal } from './components/QuickAttachModal';
+import { UpgradeModal } from './components/UpgradeModal';
 import { VoiceRecorderModal } from './components/VoiceRecorderModal';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { ToastContainer } from './components/Toast';
@@ -48,6 +53,8 @@ export function App() {
   const [isAddPhotoOpen, setIsAddPhotoOpen] = useState(false);
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
+  const [usageStats, setUsageStats] = useState(getUsageStats());
 
   const showToast = (type: 'success' | 'error' | 'info', message: string) => {
     const id = 'toast_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
@@ -94,6 +101,16 @@ export function App() {
   }, []);
 
   const handleScanComplete = (scannedImage: string, ocrResult: OCRResult) => {
+    // Increment scan quota
+    const updatedQuota = incrementScansUsed();
+    setUsageStats(getUsageStats());
+    if (!usageStats.isProUser) {
+      if (updatedQuota.remaining > 0) {
+        showToast('info', `OCR Extracted! (${updatedQuota.remaining} of 10 free scans remaining)`);
+      } else {
+        showToast('info', 'You have used all 10 free scans on this device');
+      }
+    }
     setReviewState({
       isOpen: true,
       frontImage: scannedImage,
@@ -279,6 +296,10 @@ export function App() {
               onLoadDemoData={handleLoadDemo}
               totalMediaCount={mediaItems.length}
               totalAudioCount={mediaItems.filter((m) => m.type === 'audio').length}
+              scansUsed={usageStats.scansUsed}
+              maxScans={usageStats.maxFreeScans}
+              isProUser={usageStats.isProUser}
+              onOpenUpgrade={() => setIsUpgradeOpen(true)}
             />
           )}
 
@@ -310,6 +331,15 @@ export function App() {
               media={mediaItems}
               onImportBackup={handleImportBackup}
               showToast={showToast}
+              scansUsed={usageStats.scansUsed}
+              maxScans={usageStats.maxFreeScans}
+              isProUser={usageStats.isProUser}
+              deviceId={usageStats.deviceId}
+              onOpenUpgrade={() => setIsUpgradeOpen(true)}
+              onResetScans={() => {
+                resetScansForTesting();
+                setUsageStats(getUsageStats());
+              }}
             />
           )}
         </main>
@@ -329,6 +359,7 @@ export function App() {
           apiKey={settings.geminiApiKey}
           modelName={settings.geminiModel}
           autoCaptureDefault={settings.autoCaptureEnabled}
+          onLimitReached={() => setIsUpgradeOpen(true)}
         />
 
         {/* Review & Edit Scanned Card Modal (With WhatsApp, WeChat & Media Block Before Saving) */}
@@ -398,6 +429,23 @@ export function App() {
             });
           }}
           title="Add Photo"
+        />
+        {/* Subscription / 10 Free Scans Paywall Modal */}
+        <UpgradeModal
+          isOpen={isUpgradeOpen}
+          onClose={() => setIsUpgradeOpen(false)}
+          scansUsed={usageStats.scansUsed}
+          maxScans={usageStats.maxFreeScans}
+          onUpgradeSimulated={() => {
+            setProUserStatus(true);
+            setUsageStats(getUsageStats());
+            setIsUpgradeOpen(false);
+            showToast('success', 'Upgraded to CardSnap Pro Unlimited!');
+          }}
+          onOpenSettings={() => {
+            setIsUpgradeOpen(false);
+            setActiveTab('settings');
+          }}
         />
       </div>
     </div>

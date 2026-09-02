@@ -72,3 +72,10 @@ export interface OCRResult {
   qrCodes?: DetectedQR[];
   rawText?: string;
 }
+
+export interface UsageStats {
+  scansUsed: number;
+  maxFreeScans: number;
+  deviceId: string;
+  isProUser: boolean;
+}

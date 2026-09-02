@@ -12,6 +12,10 @@ interface HomeTabProps {
   onLoadDemoData: () => void;
   totalMediaCount: number;
   totalAudioCount: number;
+  scansUsed?: number;
+  maxScans?: number;
+  isProUser?: boolean;
+  onOpenUpgrade?: () => void;
 }
 
 export const HomeTab: React.FC<HomeTabProps> = ({
@@ -23,7 +27,11 @@ export const HomeTab: React.FC<HomeTabProps> = ({
   onOpenQuickAttach,
   onLoadDemoData,
   totalMediaCount,
-  totalAudioCount
+  totalAudioCount,
+  scansUsed = 0,
+  maxScans = 10,
+  isProUser = false,
+  onOpenUpgrade
 }) => {
   const recentCards = cards.slice(0, 10);
 
@@ -40,10 +48,19 @@ export const HomeTab: React.FC<HomeTabProps> = ({
             </div>
             <span className="font-bold text-sm tracking-wide">CardSnap AI</span>
           </div>
-          <span className="text-[11px] bg-emerald-400/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-medium border border-emerald-400/30 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            Gemini OCR Active
-          </span>
+          {isProUser ? (
+            <span className="text-[11px] bg-amber-400/20 text-amber-300 px-2.5 py-0.5 rounded-full font-bold border border-amber-400/30">
+              ★ PRO PLAN (Unlimited)
+            </span>
+          ) : (
+            <button
+              onClick={onOpenUpgrade}
+              className="text-[11px] bg-white/20 hover:bg-white/30 text-white px-2.5 py-0.5 rounded-full font-semibold border border-white/30 flex items-center gap-1 transition-colors"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              {Math.max(0, maxScans - scansUsed)} of {maxScans} Free Scans Left
+            </button>
+          )}
         </div>
 
         <h1 className="text-xl font-bold mb-1">Smart Business Card Scanner</h1>

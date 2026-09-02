@@ -253,3 +253,54 @@ export async function seedDemoData(): Promise<void> {
     await saveMediaItem(media);
   }
 }
+
+const MAX_FREE_SCANS = 10;
+const DEVICE_ID_KEY = 'cardscanner_device_id';
+const SCANS_COUNT_KEY = 'cardscanner_scans_used';
+const PRO_STATUS_KEY = 'cardscanner_is_pro';
+
+export function getDeviceId(): string {
+  let id = localStorage.getItem(DEVICE_ID_KEY);
+  if (!id) {
+    id = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem(DEVICE_ID_KEY, id);
+  }
+  return id;
+}
+
+export function getUsageStats(): { scansUsed: number; maxFreeScans: number; isProUser: boolean; deviceId: string } {
+  const deviceId = getDeviceId();
+  const rawCount = localStorage.getItem(SCANS_COUNT_KEY);
+  const scansUsed = rawCount ? parseInt(rawCount, 10) : 0;
+  const isProUser = localStorage.getItem(PRO_STATUS_KEY) === 'true';
+
+  return {
+    scansUsed: isNaN(scansUsed) ? 0 : scansUsed,
+    maxFreeScans: MAX_FREE_SCANS,
+    isProUser,
+    deviceId
+  };
+}
+
+export function incrementScansUsed(): { scansUsed: number; remaining: number; limitReached: boolean } {
+  const current = getUsageStats();
+  if (current.isProUser) {
+    return { scansUsed: current.scansUsed, remaining: 9999, limitReached: false };
+  }
+  const newCount = current.scansUsed + 1;
+  localStorage.setItem(SCANS_COUNT_KEY, newCount.toString());
+  const remaining = Math.max(0, MAX_FREE_SCANS - newCount);
+  return {
+    scansUsed: newCount,
+    remaining,
+    limitReached: newCount >= MAX_FREE_SCANS
+  };
+}
+
+export function setProUserStatus(status: boolean): void {
+  localStorage.setItem(PRO_STATUS_KEY, status ? 'true' : 'false');
+}
+
+export function resetScansForTesting(): void {
+  localStorage.removeItem(SCANS_COUNT_KEY);
+}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { AppSettings, BusinessCard, MediaItem } from '../../types';
-import { Sparkles, Sliders, Database, Download, Upload, Trash2, Eye, EyeOff, RefreshCw, Shield, Sparkle } from 'lucide-react';
+import { Sparkles, Sliders, Database, Download, Upload, Trash2, Eye, EyeOff, RefreshCw, Shield, Sparkle, Crown, Zap, Smartphone } from 'lucide-react';
 import { testGeminiApiKey } from '../../services/gemini';
 
 interface SettingsTabProps {
@@ -12,6 +12,12 @@ interface SettingsTabProps {
   media: MediaItem[];
   onImportBackup: (cards: BusinessCard[], media: MediaItem[]) => void;
   showToast: (type: 'success' | 'error' | 'info', message: string) => void;
+  scansUsed?: number;
+  maxScans?: number;
+  isProUser?: boolean;
+  deviceId?: string;
+  onOpenUpgrade?: () => void;
+  onResetScans?: () => void;
 }
 
 export const SettingsTab: React.FC<SettingsTabProps> = ({
@@ -22,7 +28,13 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   cards,
   media,
   onImportBackup,
-  showToast
+  showToast,
+  scansUsed = 0,
+  maxScans = 10,
+  isProUser = false,
+  deviceId = '',
+  onOpenUpgrade,
+  onResetScans
 }) => {
   const [apiKey, setApiKey] = useState(settings.geminiApiKey);
   const [model, setModel] = useState(settings.geminiModel || 'gemini-3-flash-preview');
@@ -106,6 +118,72 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         <h1 className="text-xl font-bold text-slate-900">Settings</h1>
         <p className="text-xs text-slate-500">Configure AI OCR, Default Block Name, & Data</p>
       </div>
+
+      {/* Plan & Usage Card */}
+      <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-xs space-y-3">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+              <Crown className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 text-sm">Subscription & Device Quota</h3>
+              <p className="text-[10px] text-slate-400 font-mono">Device ID: {deviceId.slice(0, 16)}...</p>
+            </div>
+          </div>
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+            isProUser ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
+          }`}>
+            {isProUser ? 'PRO UNLIMITED' : 'FREE TRIAL'}
+          </span>
+        </div>
+
+        {isProUser ? (
+          <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-amber-900 text-xs font-medium">
+            🎉 You have active Pro access with unlimited OCR card scans on this device.
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold text-slate-700">Free OCR Scans Used:</span>
+              <span className="font-bold text-indigo-600">{scansUsed} / {maxScans} scans</span>
+            </div>
+            {/* Progress Bar */}
+            <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full transition-all duration-300"
+                style={{ width: `${Math.min(100, (scansUsed / maxScans) * 100)}%` }}
+              />
+            </div>
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-[10px] text-slate-400">
+                {Math.max(0, maxScans - scansUsed)} free scans remaining
+              </span>
+              <button
+                onClick={onOpenUpgrade}
+                className="flex items-center gap-1 text-[11px] font-bold text-indigo-600 hover:text-indigo-700"
+              >
+                <Zap className="w-3 h-3 fill-current" /> Upgrade to Unlimited
+              </button>
+            </div>
+          </div>
+        )}
+
+        {onResetScans && (
+          <div className="pt-1 border-t border-slate-100 flex justify-end">
+            <button
+              onClick={() => {
+                onResetScans();
+                showToast('info', 'Free scans count reset to 0');
+              }}
+              className="text-[10px] text-slate-400 hover:text-slate-600"
+            >
+              Reset Scans (Testing only)
+            </button>
+          </div>
+        )}
+      </div>
+
 
       <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-xs space-y-4">
         <div className="flex items-center gap-2 pb-2 border-b border-slate-100">

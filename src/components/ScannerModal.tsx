@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Camera, SwitchCamera, Zap, ZapOff, Upload, X, Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import { processCardWithGemini } from '../services/gemini';
+import { getUsageStats } from '../services/db';
 import { OCRResult } from '../types';
 
 interface ScannerModalProps {
@@ -11,6 +12,7 @@ interface ScannerModalProps {
   modelName: string;
   autoCaptureDefault?: boolean;
   autoCaptureHoldTime?: number;
+  onLimitReached?: () => void;
 }
 
 export const ScannerModal: React.FC<ScannerModalProps> = ({
@@ -20,7 +22,8 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
   apiKey,
   modelName,
   autoCaptureDefault = false,
-  autoCaptureHoldTime = 1.2
+  autoCaptureHoldTime = 1.2,
+  onLimitReached
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
