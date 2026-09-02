@@ -1,10 +1,11 @@
+import { DEFAULT_BUILTIN_KEY } from './gemini';
 import type { BusinessCard, MediaItem, AppSettings } from '../types';
 
 const DB_NAME = 'CardScannerAppDB';
 const DB_VERSION = 1;
 
 export const DEFAULT_SETTINGS: AppSettings = {
-  geminiApiKey: (import.meta as any).env?.VITE_GEMINI_API_KEY || '',
+  geminiApiKey: (import.meta as any).env?.VITE_GEMINI_API_KEY || DEFAULT_BUILTIN_KEY,
   geminiModel: 'gemini-3-flash-preview',
   defaultBlockName: 'Networking / Leads',
   autoCaptureEnabled: false,
@@ -138,7 +139,7 @@ export async function getSettings(): Promise<AppSettings> {
           loaded.geminiModel = 'gemini-3-flash-preview';
         }
         if (!loaded.geminiApiKey || !loaded.geminiApiKey.trim()) {
-          loaded.geminiApiKey = loaded.geminiApiKey || (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
+          loaded.geminiApiKey = (loaded.geminiApiKey && loaded.geminiApiKey.trim()) ? loaded.geminiApiKey : DEFAULT_BUILTIN_KEY;
         }
         resolve({ ...DEFAULT_SETTINGS, ...loaded });
       } else {

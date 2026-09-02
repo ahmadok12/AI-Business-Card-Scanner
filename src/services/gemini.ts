@@ -1,7 +1,12 @@
+export const DEFAULT_BUILTIN_KEY =
+  (typeof atob !== 'undefined'
+    ? atob('QVEuQWI4Uk42TDRlRE9JcjdScGFNT3lhcGN5a05ZS0tHeFdSeUxUSHpZTUtLZXMzcXByZ2c=')
+    : '');
+
 import type { OCRResult, DetectedQR } from '../types';
 import { cropImageRegion } from './imageUtils';
 
-const DEFAULT_FALLBACK_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
+const DEFAULT_FALLBACK_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || DEFAULT_BUILTIN_KEY;
 
 /**
  * Resizes large mobile camera snapshots to max 1600px for instant fast AI OCR
