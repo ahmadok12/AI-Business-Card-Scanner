@@ -1,6 +1,6 @@
 import React from 'react';
 import type { BusinessCard } from '../types';
-import { Phone, Mail, MessageCircle, Paperclip, ChevronRight, Building2 } from 'lucide-react';
+import { Phone, Mail, MessageCircle, MessageSquare, Paperclip, ChevronRight, Building2 } from 'lucide-react';
 
 interface BusinessCardItemProps {
   card: BusinessCard;
@@ -13,6 +13,8 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
   onOpenCardDetail,
   onOpenQuickAttach
 }) => {
+  const cleanWhatsapp = (card.whatsapp || card.phone || '').replace(/[^0-9]/g, '');
+
   return (
     <div
       onClick={() => onOpenCardDetail(card)}
@@ -21,14 +23,14 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
         background: 'linear-gradient(135deg, #ffffff 0%, #fafbfd 100%)'
       }}
     >
-      {/* Decorative subtle top edge line for luxury card feel */}
+      {/* Subtle top card accent line */}
       <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-500 via-indigo-400 to-slate-300 opacity-80" />
 
-      {/* Top Bar: Company Name / Block Tag */}
-      <div className="flex items-center justify-between gap-2 mb-2.5">
+      {/* Top Bar: Company Name & Block Tag */}
+      <div className="flex items-center justify-between gap-2 mb-2">
         <div className="flex items-center gap-1.5 min-w-0">
           <Building2 className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-          <span className="font-bold text-xs text-indigo-900 truncate tracking-tight uppercase">
+          <span className="font-bold text-xs text-indigo-950 truncate tracking-tight uppercase">
             {card.company || card.blockName || 'Business Contact'}
           </span>
         </div>
@@ -55,40 +57,84 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
 
         {/* Thumbnail or Monogram badge */}
         {card.frontImageUrl ? (
-          <div className="w-11 h-11 rounded-xl overflow-hidden border border-slate-200 shrink-0 bg-slate-100 shadow-2xs">
+          <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-200 shrink-0 bg-slate-100 shadow-2xs">
             <img src={card.frontImageUrl} alt={card.name} className="w-full h-full object-cover" />
           </div>
         ) : (
-          <div className="w-11 h-11 rounded-xl bg-slate-900 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-2xs">
+          <div className="w-10 h-10 rounded-xl bg-slate-900 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-2xs">
             {card.name.charAt(0).toUpperCase()}
           </div>
         )}
       </div>
 
-      {/* Minimal Footer: Minimal Contact Info & Discreet Attach Media button */}
-      <div className="flex items-center justify-between pt-2.5 border-t border-slate-100/90 text-xs text-slate-500">
-        {/* Left minimal contact chip */}
-        <div className="flex items-center gap-3 min-w-0 truncate text-[11px]">
+      {/* Minimal Footer: Call, WhatsApp, WeChat icons + Quick Attach */}
+      <div className="flex items-center justify-between pt-2.5 border-t border-slate-100/90 text-xs">
+        {/* Quick Action Icons: Call, WhatsApp, WeChat, Email */}
+        <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+          {/* Call Icon */}
           {card.phone ? (
-            <span className="flex items-center gap-1 font-mono text-slate-600 truncate">
-              <Phone className="w-3 h-3 text-slate-400 shrink-0" />
-              <span className="truncate">{card.phone}</span>
-            </span>
-          ) : card.email ? (
-            <span className="flex items-center gap-1 text-slate-600 truncate">
-              <Mail className="w-3 h-3 text-slate-400 shrink-0" />
-              <span className="truncate">{card.email}</span>
-            </span>
-          ) : null}
+            <a
+              href={`tel:${card.phone}`}
+              className="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center transition-colors"
+              title={`Call ${card.phone}`}
+            >
+              <Phone className="w-3.5 h-3.5" />
+            </a>
+          ) : (
+            <div className="w-7 h-7 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center opacity-40">
+              <Phone className="w-3.5 h-3.5" />
+            </div>
+          )}
 
-          {card.whatsapp && (
-            <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded-md flex items-center gap-0.5 shrink-0 border border-emerald-100">
-              <MessageCircle className="w-2.5 h-2.5 text-emerald-600" /> WhatsApp
-            </span>
+          {/* WhatsApp Icon */}
+          {cleanWhatsapp ? (
+            <a
+              href={`https://wa.me/${cleanWhatsapp}`}
+              target="_blank"
+              rel="noreferrer"
+              className="w-7 h-7 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center transition-colors shadow-2xs"
+              title={`WhatsApp: ${card.whatsapp || card.phone}`}
+            >
+              <MessageCircle className="w-3.5 h-3.5 fill-current" />
+            </a>
+          ) : (
+            <div className="w-7 h-7 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center opacity-40">
+              <MessageCircle className="w-3.5 h-3.5" />
+            </div>
+          )}
+
+          {/* WeChat Icon */}
+          {card.wechat ? (
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(card.wechat || '');
+                alert(`WeChat ID (${card.wechat}) copied to clipboard!`);
+              }}
+              className="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center transition-colors border border-emerald-200/60"
+              title={`WeChat ID: ${card.wechat} (Click to copy)`}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+            </button>
+          ) : (
+            <div className="w-7 h-7 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center opacity-40">
+              <MessageSquare className="w-3.5 h-3.5" />
+            </div>
+          )}
+
+          {/* Email Icon */}
+          {card.email && (
+            <a
+              href={`mailto:${card.email}`}
+              className="w-7 h-7 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors"
+              title={`Email: ${card.email}`}
+            >
+              <Mail className="w-3.5 h-3.5" />
+            </a>
           )}
         </div>
 
-        {/* Right Actions: Minimal Attach Button + Card Arrow */}
+        {/* Right Side: + Media button & arrow */}
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             type="button"
@@ -103,7 +149,7 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
             <span>+ Media</span>
           </button>
 
-          <div className="w-6 h-6 rounded-lg flex items-center justify-center text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all">
+          <div className="w-5 h-5 flex items-center justify-center text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all">
             <ChevronRight className="w-4 h-4" />
           </div>
         </div>
