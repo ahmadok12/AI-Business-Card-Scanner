@@ -54,6 +54,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
       dataUrl: item.dataUrl,
       textContent: item.textContent,
       audioDuration: item.audioDuration,
+      sectionName: item.sectionName || 'Section 1',
       cardId: card.id,
       cardName: card.name,
       createdAt: Date.now()
@@ -83,7 +84,8 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
     title: m.title,
     dataUrl: m.dataUrl,
     textContent: m.textContent,
-    audioDuration: m.audioDuration
+    audioDuration: m.audioDuration,
+    sectionName: m.sectionName || 'Section 1'
   }));
 
   const cleanWhatsappNumber = (current.whatsapp || current.phone || '').replace(/[^0-9]/g, '');

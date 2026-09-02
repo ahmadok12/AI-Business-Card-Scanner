@@ -34,6 +34,7 @@ export interface MediaItem {
   audioDuration?: number;
   cardId?: string;
   cardName?: string;
+  sectionName?: string;
   createdAt: number;
 }
 

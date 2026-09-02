@@ -151,6 +151,7 @@ export function App() {
             dataUrl: item.dataUrl,
             textContent: item.textContent,
             audioDuration: item.audioDuration,
+            sectionName: item.sectionName || 'Section 1',
             cardId: newCard.id,
             cardName: newCard.name,
             createdAt: Date.now()
