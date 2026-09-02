@@ -56,3 +56,16 @@ export function cropImageRegion(
     img.src = base64Image;
   });
 }
+
+export function downloadImageToDevice(dataUrl: string, filename: string): void {
+  try {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (err) {
+    console.error('Failed to download image:', err);
+  }
+}

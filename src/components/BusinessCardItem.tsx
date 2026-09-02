@@ -1,6 +1,6 @@
 import React from 'react';
 import type { BusinessCard } from '../types';
-import { Phone, Mail, Paperclip, ChevronRight, Building2 } from 'lucide-react';
+import { Phone, Mail, Building2, Eye, Paperclip } from 'lucide-react';
 import { WhatsAppIcon, WeChatIcon } from './BrandIcons';
 
 interface BusinessCardItemProps {
@@ -68,9 +68,9 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
         )}
       </div>
 
-      {/* Minimal Footer: Call, Official WhatsApp, Official WeChat icons + Quick Attach */}
+      {/* Minimal Footer: Left (Call, WhatsApp, WeChat) | Right (Only 2 text buttons: View, Attach Media) */}
       <div className="flex items-center justify-between pt-2.5 border-t border-slate-100/90 text-xs">
-        {/* Quick Action Icons */}
+        {/* Left Side: Quick Action Icons */}
         <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
           {/* Call Icon */}
           {card.phone ? (
@@ -141,24 +141,25 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
           )}
         </div>
 
-        {/* Right Side: + Media button & arrow */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        {/* Right Side: ONLY 2 text buttons: View and Attach Media */}
+        <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpenQuickAttach(card);
-            }}
-            className="flex items-center gap-1 px-2.5 py-1 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 rounded-lg text-[11px] font-semibold transition-colors"
-            title="Attach media (voice/photo/note)"
+            onClick={() => onOpenCardDetail(card)}
+            className="flex items-center gap-1 px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[11px] rounded-lg transition-all active:scale-95 border border-indigo-100/60"
           >
-            <Paperclip className="w-3 h-3" />
-            <span>+ Media</span>
+            <Eye className="w-3 h-3" />
+            <span>View</span>
           </button>
 
-          <div className="w-5 h-5 flex items-center justify-center text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all">
-            <ChevronRight className="w-4 h-4" />
-          </div>
+          <button
+            type="button"
+            onClick={() => onOpenQuickAttach(card)}
+            className="flex items-center gap-1 px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg transition-all active:scale-95 border border-slate-200/60"
+          >
+            <Paperclip className="w-3 h-3 text-slate-500" />
+            <span>Attach media</span>
+          </button>
         </div>
       </div>
     </div>

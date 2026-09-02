@@ -1,3 +1,4 @@
+import { downloadImageToDevice } from '../services/imageUtils';
 import React, { useState } from 'react';
 import type { BusinessCard, MediaItem } from '../types';
 import { Phone, Mail, Globe, MapPin, Download, Trash2, Edit3, X, Share2, MessageCircle, MessageSquare, QrCode, Tag, FileText, Calendar, ExternalLink, Check } from 'lucide-react';
@@ -265,32 +266,52 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 {current.whatsappQrUrl && (
-                  <div className="bg-white rounded-xl p-2.5 border border-emerald-200 flex flex-col items-center text-center">
-                    <span className="text-[10px] font-bold text-emerald-800 mb-1 flex items-center gap-1">
-                      <MessageCircle className="w-3 h-3 text-emerald-600" /> WhatsApp QR
+                  <div className="bg-white rounded-2xl p-3 border border-emerald-200 flex flex-col items-center text-center shadow-xs">
+                    <span className="text-[11px] font-bold text-emerald-900 mb-1.5 flex items-center gap-1">
+                      <MessageCircle className="w-3.5 h-3.5 text-emerald-600" /> WhatsApp QR
                     </span>
                     <div
-                      className="w-24 h-24 rounded-lg overflow-hidden border border-slate-200 cursor-pointer p-1 bg-white hover:scale-105 transition-transform"
+                      className="w-24 h-24 rounded-xl overflow-hidden border border-slate-200 cursor-pointer p-1 bg-white hover:scale-105 transition-transform shadow-2xs mb-2"
                       onClick={() => setLightboxImage(current.whatsappQrUrl || null)}
+                      title="Tap to enlarge"
                     >
                       <img src={current.whatsappQrUrl} alt="WhatsApp QR" className="w-full h-full object-contain" />
                     </div>
-                    <span className="text-[9px] text-slate-400 mt-1">Tap to enlarge</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        downloadImageToDevice(current.whatsappQrUrl!, `${current.name}_WhatsApp_QR.png`);
+                      }}
+                      className="w-full flex items-center justify-center gap-1 py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded-lg transition-colors border border-emerald-200/80"
+                    >
+                      <Download className="w-3 h-3" /> Save to Device
+                    </button>
                   </div>
                 )}
 
                 {current.wechatQrUrl && (
-                  <div className="bg-white rounded-xl p-2.5 border border-emerald-200 flex flex-col items-center text-center">
-                    <span className="text-[10px] font-bold text-emerald-800 mb-1 flex items-center gap-1">
-                      <MessageSquare className="w-3 h-3 text-emerald-600" /> WeChat QR
+                  <div className="bg-white rounded-2xl p-3 border border-emerald-200 flex flex-col items-center text-center shadow-xs">
+                    <span className="text-[11px] font-bold text-emerald-900 mb-1.5 flex items-center gap-1">
+                      <MessageSquare className="w-3.5 h-3.5 text-emerald-600" /> WeChat QR
                     </span>
                     <div
-                      className="w-24 h-24 rounded-lg overflow-hidden border border-slate-200 cursor-pointer p-1 bg-white hover:scale-105 transition-transform"
+                      className="w-24 h-24 rounded-xl overflow-hidden border border-slate-200 cursor-pointer p-1 bg-white hover:scale-105 transition-transform shadow-2xs mb-2"
                       onClick={() => setLightboxImage(current.wechatQrUrl || null)}
+                      title="Tap to enlarge"
                     >
                       <img src={current.wechatQrUrl} alt="WeChat QR" className="w-full h-full object-contain" />
                     </div>
-                    <span className="text-[9px] text-slate-400 mt-1">Tap to enlarge</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        downloadImageToDevice(current.wechatQrUrl!, `${current.name}_WeChat_QR.png`);
+                      }}
+                      className="w-full flex items-center justify-center gap-1 py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded-lg transition-colors border border-emerald-200/80"
+                    >
+                      <Download className="w-3 h-3" /> Save to Device
+                    </button>
                   </div>
                 )}
               </div>
@@ -483,13 +504,26 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
       {/* Lightbox for viewing photos and QR codes */}
       {lightboxImage && (
         <div
-          className="fixed inset-0 z-60 bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
+          className="fixed inset-0 z-60 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4"
           onClick={() => setLightboxImage(null)}
         >
-          <img src={lightboxImage} alt="Full preview" className="max-w-full max-h-full rounded-2xl object-contain bg-white p-2" />
-          <button className="absolute top-4 right-4 text-white p-2 rounded-full bg-slate-800">
-            <X className="w-6 h-6" />
-          </button>
+          <div className="absolute top-4 right-4 flex items-center gap-2 z-70" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              onClick={() => downloadImageToDevice(lightboxImage, `${current.name}_scanned_image.png`)}
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-xs font-semibold backdrop-blur-md transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              <span>Save to Device</span>
+            </button>
+            <button
+              onClick={() => setLightboxImage(null)}
+              className="text-white p-2 rounded-full bg-slate-800/80 hover:bg-slate-700 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <img src={lightboxImage} alt="Full preview" className="max-w-full max-h-[82vh] rounded-2xl object-contain bg-white p-2" />
         </div>
       )}
     </div>
