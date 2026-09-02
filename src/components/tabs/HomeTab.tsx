@@ -1,3 +1,4 @@
+import { BusinessCardItem } from '../BusinessCardItem';
 import React from 'react';
 import type { BusinessCard } from '../../types';
 import { Sparkles, Eye, Paperclip, Camera, Mic, Image as ImageIcon, MessageCircle } from 'lucide-react';
@@ -143,68 +144,12 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         {recentCards.length > 0 ? (
           <div className="space-y-3">
             {recentCards.map((card) => (
-              <div
+              <BusinessCardItem
                 key={card.id}
-                className="p-3.5 bg-white rounded-2xl border border-slate-100 shadow-xs hover:border-indigo-200 transition-all flex flex-col gap-2.5"
-              >
-                <div className="flex items-center gap-3.5 min-w-0">
-                  {card.frontImageUrl ? (
-                    <div
-                      className="w-12 h-12 rounded-xl overflow-hidden border border-slate-200 shrink-0 bg-slate-100 cursor-pointer"
-                      onClick={() => onOpenCardDetail(card)}
-                    >
-                      <img src={card.frontImageUrl} alt={card.name} className="w-full h-full object-cover" />
-                    </div>
-                  ) : (
-                    <div
-                      className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 font-bold text-sm flex items-center justify-center shrink-0 border border-indigo-100 cursor-pointer"
-                      onClick={() => onOpenCardDetail(card)}
-                    >
-                      {card.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-
-                  <div className="min-w-0 flex-1 cursor-pointer" onClick={() => onOpenCardDetail(card)}>
-                    <h3 className="text-sm font-bold text-slate-900 truncate hover:text-indigo-600 transition-colors">
-                      {card.name}
-                    </h3>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-500 truncate">
-                      {card.title && <span className="truncate">{card.title}</span>}
-                      {card.title && card.company && <span>•</span>}
-                      {card.company && <span className="font-medium text-slate-700 truncate">{card.company}</span>}
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] font-medium px-2 py-0.2 bg-slate-100 text-slate-600 rounded-md">
-                        {card.blockName}
-                      </span>
-                      {card.whatsapp && (
-                        <span className="text-[10px] font-medium px-1.5 py-0.2 bg-emerald-50 text-emerald-700 rounded-md flex items-center gap-0.5">
-                          <MessageCircle className="w-2.5 h-2.5" /> WhatsApp
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Explicit View & Attach Media Buttons */}
-                <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-                  <button
-                    onClick={() => onOpenCardDetail(card)}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-xl transition-all active:scale-95"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>View Card</span>
-                  </button>
-
-                  <button
-                    onClick={() => onOpenQuickAttach(card)}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all active:scale-95"
-                  >
-                    <Paperclip className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Attach Media</span>
-                  </button>
-                </div>
-              </div>
+                card={card}
+                onOpenCardDetail={onOpenCardDetail}
+                onOpenQuickAttach={onOpenQuickAttach}
+              />
             ))}
           </div>
         ) : (
