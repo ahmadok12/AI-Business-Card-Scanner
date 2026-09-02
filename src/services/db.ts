@@ -137,6 +137,9 @@ export async function getSettings(): Promise<AppSettings> {
         if (loaded.geminiModel === 'gemini-1.5-flash' || !loaded.geminiModel) {
           loaded.geminiModel = 'gemini-3-flash-preview';
         }
+        if (!loaded.geminiApiKey || !loaded.geminiApiKey.trim()) {
+          loaded.geminiApiKey = loaded.geminiApiKey || (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
+        }
         resolve({ ...DEFAULT_SETTINGS, ...loaded });
       } else {
         resolve(DEFAULT_SETTINGS);

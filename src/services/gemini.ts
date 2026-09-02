@@ -1,16 +1,67 @@
 import type { OCRResult, DetectedQR } from '../types';
 import { cropImageRegion } from './imageUtils';
 
+const DEFAULT_FALLBACK_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
+
+/**
+ * Resizes large mobile camera snapshots to max 1600px for instant fast AI OCR
+ */
+function optimizeImageForOCR(base64Image: string, maxDim: number = 1600): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      let width = img.naturalWidth || img.width;
+      let height = img.naturalHeight || img.height;
+
+      if (width <= maxDim && height <= maxDim) {
+        resolve(base64Image);
+        return;
+      }
+
+      if (width > height) {
+        height = Math.round((height * maxDim) / width);
+        width = maxDim;
+      } else {
+        width = Math.round((width * maxDim) / height);
+        height = maxDim;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(base64Image);
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', 0.88));
+    };
+    img.onerror = () => resolve(base64Image);
+    img.src = base64Image;
+  });
+}
+
 export async function processCardWithGemini(
   imageBase64: string,
-  apiKey: string,
+  apiKey?: string,
   modelName: string = 'gemini-3-flash-preview'
 ): Promise<OCRResult> {
-  let cleanBase64 = imageBase64;
+  const effectiveKey = apiKey?.trim() || (import.meta as any).env?.VITE_GEMINI_API_KEY || DEFAULT_FALLBACK_KEY;
+
+  if (!effectiveKey) {
+    throw new Error('No Gemini API Key found. Please enter an API key in Settings.');
+  }
+
+  const optimizedImage = await optimizeImageForOCR(imageBase64);
+
+  let cleanBase64 = optimizedImage;
   let mimeType = 'image/jpeg';
 
-  if (imageBase64.includes(';base64,')) {
-    const parts = imageBase64.split(';base64,');
+  if (optimizedImage.includes(';base64,')) {
+    const parts = optimizedImage.split(';base64,');
     cleanBase64 = parts[1];
     const mimeMatch = parts[0].match(/:(.*?);/);
     if (mimeMatch) {
@@ -19,10 +70,10 @@ export async function processCardWithGemini(
   }
 
   const prompt = `
-You are an expert business card scanner and OCR model.
-Analyze this business card image. Extract all text and detect any QR codes / 2D barcodes present on the card.
+You are an expert business card reader and OCR vision model.
+Analyze this business card image. Extract all text and contact information accurately.
 
-Return ONLY a valid JSON object matching this schema with NO markdown fences and no extra text:
+Return ONLY a valid JSON object matching this schema with NO markdown code fences and no extra text:
 {
   "name": "Full name of the person",
   "title": "Job title or position",
@@ -47,11 +98,11 @@ Return ONLY a valid JSON object matching this schema with NO markdown fences and
 }
 
 For qrCodes:
-- Look carefully for any square 2D QR code / barcodes on the card.
-- If a QR code is next to WeChat / 微信号 or WeChat logo, set type to "wechat".
+- Look carefully for any 2D QR codes on the card.
+- If a QR code is next to WeChat or WeChat logo, set type to "wechat".
 - If a QR code is next to WhatsApp or phone number, set type to "whatsapp".
-- If any generic vCard or website QR code is present, set type to "generic".
-- box_2d MUST be 4 normalized integers from 0 to 1000 in [ymin, xmin, ymax, xmax] format bounding the QR code square.
+- If any generic QR code is present, set type to "generic".
+- box_2d MUST be 4 normalized integers from 0 to 1000 in [ymin, xmin, ymax, xmax] format.
 - If no QR codes are visible on the card, return "qrCodes": [].
 `;
 
@@ -68,7 +119,7 @@ For qrCodes:
 
   for (const model of uniqueModels) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${effectiveKey}`;
 
       const requestBody = {
         contents: [
@@ -117,7 +168,7 @@ For qrCodes:
 
       const parsed = JSON.parse(cleanedJson);
 
-      // Process detected QR codes and auto-crop from image
+      // Process detected QR codes and auto-crop
       let whatsappQrUrl: string | undefined = undefined;
       let wechatQrUrl: string | undefined = undefined;
       const processedQrs: DetectedQR[] = [];
@@ -126,7 +177,7 @@ For qrCodes:
         for (const qr of parsed.qrCodes) {
           if (Array.isArray(qr.box_2d) && qr.box_2d.length === 4) {
             try {
-              const cropped = await cropImageRegion(imageBase64, qr.box_2d as [number, number, number, number]);
+              const cropped = await cropImageRegion(optimizedImage, qr.box_2d as [number, number, number, number]);
               processedQrs.push({
                 type: qr.type || 'generic',
                 label: qr.label || 'QR Code',
@@ -139,7 +190,6 @@ For qrCodes:
               } else if (qr.type === 'wechat' && !wechatQrUrl) {
                 wechatQrUrl = cropped;
               } else if (!whatsappQrUrl && !wechatQrUrl) {
-                // If single generic QR on card, attach to both as suggested
                 whatsappQrUrl = cropped;
                 wechatQrUrl = cropped;
               }
@@ -179,7 +229,8 @@ For qrCodes:
 }
 
 export async function testGeminiApiKey(apiKey: string, model: string = 'gemini-3-flash-preview'): Promise<boolean> {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const effectiveKey = apiKey?.trim() || DEFAULT_FALLBACK_KEY;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${effectiveKey}`;
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

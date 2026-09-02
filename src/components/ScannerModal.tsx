@@ -227,8 +227,12 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
     }
   };
 
+  const [capturedImageForRetry, setCapturedImageForRetry] = useState<string | null>(null);
+
   const runGeminiOCR = async (base64Image: string) => {
     setIsProcessing(true);
+    setErrorMsg(null);
+    setCapturedImageForRetry(base64Image);
     setProcessingStatus('Extracting contact details with Gemini AI...');
     try {
       const ocrResult = await processCardWithGemini(base64Image, apiKey, modelName);
@@ -236,27 +240,31 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
       onClose();
     } catch (err: any) {
       console.error('OCR Error:', err);
-      const fallbackResult: OCRResult = {
-        name: '',
-        title: '',
-        company: '',
-        phone: '',
-        secondaryPhone: '',
-        whatsapp: '',
-        wechat: '',
-        email: '',
-        website: '',
-        address: '',
-        socialLinks: '',
-        notes: '',
-        tags: ['Scanned Card']
-      };
-      setErrorMsg(`Gemini Notice: ${err.message || 'Could not auto-extract details'}. You can fill details manually.`);
-      onScanComplete(base64Image, fallbackResult);
-      onClose();
+      setErrorMsg(`AI OCR Error: ${err.message || 'Could not extract details'}. Please retry or enter manually.`);
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const handleProceedManually = () => {
+    if (!capturedImageForRetry) return;
+    const fallbackResult: OCRResult = {
+      name: '',
+      title: '',
+      company: '',
+      phone: '',
+      secondaryPhone: '',
+      whatsapp: '',
+      wechat: '',
+      email: '',
+      website: '',
+      address: '',
+      socialLinks: '',
+      notes: '',
+      tags: ['Scanned Card']
+    };
+    onScanComplete(capturedImageForRetry, fallbackResult);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -341,11 +349,47 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
           </div>
         )}
 
-        {/* Error Notification */}
+        {/* Error Notification & Action Overlay */}
         {errorMsg && (
-          <div className="absolute top-4 left-4 right-4 bg-rose-950/90 border border-rose-600/50 p-3 rounded-2xl flex items-center gap-2.5 text-xs text-rose-200 z-20">
-            <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
-            <span>{errorMsg}</span>
+          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md p-6 flex flex-col items-center justify-center text-center z-40 animate-in fade-in">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center mb-3">
+              <AlertCircle className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-bold text-white mb-1">OCR Scan Notice</h3>
+            <p className="text-xs text-rose-200/90 max-w-xs mb-5 leading-relaxed">{errorMsg}</p>
+
+            <div className="flex flex-col gap-2.5 w-full max-w-xs">
+              {capturedImageForRetry && (
+                <button
+                  type="button"
+                  onClick={() => runGeminiOCR(capturedImageForRetry)}
+                  className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all active:scale-98"
+                >
+                  Retry AI Extraction
+                </button>
+              )}
+
+              {capturedImageForRetry && (
+                <button
+                  type="button"
+                  onClick={handleProceedManually}
+                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs rounded-xl transition-all"
+                >
+                  Enter Details Manually
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  setErrorMsg(null);
+                  startCamera();
+                }}
+                className="w-full py-2 bg-transparent text-slate-400 hover:text-white font-medium text-xs transition-colors"
+              >
+                Scan Another Card
+              </button>
+            </div>
           </div>
         )}
       </div>
