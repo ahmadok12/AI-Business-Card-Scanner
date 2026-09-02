@@ -1,6 +1,7 @@
 import React from 'react';
 import type { BusinessCard } from '../types';
-import { Phone, Mail, MessageCircle, MessageSquare, Paperclip, ChevronRight, Building2 } from 'lucide-react';
+import { Phone, Mail, Paperclip, ChevronRight, Building2 } from 'lucide-react';
+import { WhatsAppIcon, WeChatIcon } from './BrandIcons';
 
 interface BusinessCardItemProps {
   card: BusinessCard;
@@ -23,7 +24,7 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
         background: 'linear-gradient(135deg, #ffffff 0%, #fafbfd 100%)'
       }}
     >
-      {/* Subtle top card accent line */}
+      {/* Subtle top luxury card accent line */}
       <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-500 via-indigo-400 to-slate-300 opacity-80" />
 
       {/* Top Bar: Company Name & Block Tag */}
@@ -67,15 +68,15 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
         )}
       </div>
 
-      {/* Minimal Footer: Call, WhatsApp, WeChat icons + Quick Attach */}
+      {/* Minimal Footer: Call, Official WhatsApp, Official WeChat icons + Quick Attach */}
       <div className="flex items-center justify-between pt-2.5 border-t border-slate-100/90 text-xs">
-        {/* Quick Action Icons: Call, WhatsApp, WeChat, Email */}
+        {/* Quick Action Icons */}
         <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
           {/* Call Icon */}
           {card.phone ? (
             <a
               href={`tel:${card.phone}`}
-              className="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center transition-colors"
+              className="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center transition-colors border border-emerald-100"
               title={`Call ${card.phone}`}
             >
               <Phone className="w-3.5 h-3.5" />
@@ -86,24 +87,27 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
             </div>
           )}
 
-          {/* WhatsApp Icon */}
+          {/* Official WhatsApp Icon */}
           {cleanWhatsapp ? (
             <a
               href={`https://wa.me/${cleanWhatsapp}`}
               target="_blank"
               rel="noreferrer"
-              className="w-7 h-7 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center transition-colors shadow-2xs"
-              title={`WhatsApp: ${card.whatsapp || card.phone}`}
+              className="w-7 h-7 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white flex items-center justify-center transition-all shadow-xs active:scale-95"
+              title={`WhatsApp Chat: ${card.whatsapp || card.phone}`}
             >
-              <MessageCircle className="w-3.5 h-3.5 fill-current" />
+              <WhatsAppIcon className="w-4 h-4 fill-white" />
             </a>
           ) : (
-            <div className="w-7 h-7 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center opacity-40">
-              <MessageCircle className="w-3.5 h-3.5" />
+            <div
+              className="w-7 h-7 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center opacity-40"
+              title="No WhatsApp number"
+            >
+              <WhatsAppIcon className="w-4 h-4 fill-slate-300" />
             </div>
           )}
 
-          {/* WeChat Icon */}
+          {/* Official WeChat Icon */}
           {card.wechat ? (
             <button
               type="button"
@@ -111,14 +115,17 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
                 navigator.clipboard.writeText(card.wechat || '');
                 alert(`WeChat ID (${card.wechat}) copied to clipboard!`);
               }}
-              className="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 flex items-center justify-center transition-colors border border-emerald-200/60"
+              className="w-7 h-7 rounded-lg bg-[#07C160] hover:bg-[#06ad56] text-white flex items-center justify-center transition-all shadow-xs active:scale-95"
               title={`WeChat ID: ${card.wechat} (Click to copy)`}
             >
-              <MessageSquare className="w-3.5 h-3.5" />
+              <WeChatIcon className="w-4 h-4 fill-white" />
             </button>
           ) : (
-            <div className="w-7 h-7 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center opacity-40">
-              <MessageSquare className="w-3.5 h-3.5" />
+            <div
+              className="w-7 h-7 rounded-lg bg-slate-50 text-slate-300 flex items-center justify-center opacity-40"
+              title="No WeChat ID"
+            >
+              <WeChatIcon className="w-4 h-4 fill-slate-300" />
             </div>
           )}
 
@@ -126,7 +133,7 @@ export const BusinessCardItem: React.FC<BusinessCardItemProps> = ({
           {card.email && (
             <a
               href={`mailto:${card.email}`}
-              className="w-7 h-7 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors"
+              className="w-7 h-7 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors border border-blue-100"
               title={`Email: ${card.email}`}
             >
               <Mail className="w-3.5 h-3.5" />
