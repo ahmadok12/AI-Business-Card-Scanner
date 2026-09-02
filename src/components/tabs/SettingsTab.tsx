@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import type { AppSettings, BusinessCard, MediaItem } from '../../types';
-import { Sparkles, Sliders, Database, Download, Upload, Trash2, Eye, EyeOff, RefreshCw, Shield, Sparkle, Crown, Zap, Smartphone } from 'lucide-react';
-import { testGeminiApiKey } from '../../services/gemini';
+import { Sliders, Database, Download, Upload, Trash2, Sparkle, Crown, Zap } from 'lucide-react';
 
 interface SettingsTabProps {
   settings: AppSettings;
@@ -36,38 +35,16 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   onOpenUpgrade,
   onResetScans
 }) => {
-  const [apiKey, setApiKey] = useState(settings.geminiApiKey);
-  const [model, setModel] = useState(settings.geminiModel || 'gemini-3-flash-preview');
   const [defaultBlock, setDefaultBlock] = useState(settings.defaultBlockName);
   const [autoCapture, setAutoCapture] = useState(settings.autoCaptureEnabled);
-  const [showKey, setShowKey] = useState(false);
-  const [isTestingKey, setIsTestingKey] = useState(false);
 
   const handleSave = () => {
     onUpdateSettings({
       ...settings,
-      geminiApiKey: apiKey.trim(),
-      geminiModel: model,
       defaultBlockName: defaultBlock.trim() || 'General',
       autoCaptureEnabled: autoCapture
     });
-    showToast('success', 'Settings saved successfully');
-  };
-
-  const handleTestKey = async () => {
-    if (!apiKey.trim()) {
-      showToast('error', 'Please enter a Gemini API Key first');
-      return;
-    }
-    setIsTestingKey(true);
-    try {
-      await testGeminiApiKey(apiKey.trim(), model);
-      showToast('success', 'Gemini API Key verified and working!');
-    } catch (err: any) {
-      showToast('error', `Verification failed: ${err.message || 'Check key and permissions'}`);
-    } finally {
-      setIsTestingKey(false);
-    }
+    showToast('success', 'Preferences saved successfully');
   };
 
   const handleExportBackup = () => {
@@ -116,7 +93,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
     <div className="flex flex-col gap-5 pb-24 animate-in fade-in text-xs">
       <div className="px-1">
         <h1 className="text-xl font-bold text-slate-900">Settings</h1>
-        <p className="text-xs text-slate-500">Configure AI OCR, Default Block Name, & Data</p>
+        <p className="text-xs text-slate-500">Preferences, Quota & Data Management</p>
       </div>
 
       {/* Plan & Usage Card */}
@@ -184,76 +161,15 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         )}
       </div>
 
-
+      {/* Defaults & Scanner Preferences */}
       <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-xs space-y-4">
         <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
           <div className="w-7 h-7 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="font-bold text-slate-900 text-sm">Gemini AI Model & OCR</h3>
-            <p className="text-[11px] text-slate-400">Google Gemini API key and model selection</p>
-          </div>
-        </div>
-
-        <div>
-          <label className="text-[11px] font-semibold text-slate-700 block mb-1.5">
-            Gemini API Key
-          </label>
-          <div className="relative">
-            <input
-              type={showKey ? 'text' : 'password'}
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Paste your Gemini API key..."
-              className="w-full pl-3.5 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <button
-              type="button"
-              onClick={() => setShowKey(!showKey)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-            >
-              {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
-          <div className="flex items-center justify-between mt-2">
-            <span className="text-[10px] text-slate-400">Pre-configured with your API key</span>
-            <button
-              onClick={handleTestKey}
-              disabled={isTestingKey}
-              className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-lg transition-colors flex items-center gap-1.5"
-            >
-              {isTestingKey ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Shield className="w-3 h-3" />}
-              {isTestingKey ? 'Verifying...' : 'Test Connection'}
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <label className="text-[11px] font-semibold text-slate-700 block mb-1.5">
-            Gemini Model (Default: Least Resource Model)
-          </label>
-          <select
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
-          >
-            <option value="gemini-3-flash-preview">gemini-3-flash-preview (Fastest & Lightest - Recommended)</option>
-            <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite (Ultra-Lightweight Flash)</option>
-            <option value="gemini-3.7-flash">gemini-3.7-flash (Gemini 3.7 Flash)</option>
-            <option value="gemini-flash-latest">gemini-flash-latest (Auto Latest Flash)</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-xs space-y-4">
-        <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
-          <div className="w-7 h-7 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
             <Sliders className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-900 text-sm">Defaults & Scanner Preferences</h3>
-            <p className="text-[11px] text-slate-400">Save time during card captures</p>
+            <h3 className="font-bold text-slate-900 text-sm">Defaults & Preferences</h3>
+            <p className="text-[11px] text-slate-400">Default category name & scanner settings</p>
           </div>
         </div>
 
@@ -269,7 +185,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <p className="text-[10px] text-slate-400 mt-1">
-            This name will be assigned automatically to all new cards, photos, and voice notes so you don't need to re-enter it each time.
+            Assigned automatically to all new cards, photos, and voice notes so you don't need to re-enter it each time.
           </p>
         </div>
 
@@ -303,6 +219,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         </button>
       </div>
 
+      {/* Data & Backup */}
       <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-xs space-y-3">
         <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
           <div className="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -310,7 +227,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           </div>
           <div>
             <h3 className="font-bold text-slate-900 text-sm">Data & Backup</h3>
-            <p className="text-[11px] text-slate-400">Offline IndexedDB storage</p>
+            <p className="text-[11px] text-slate-400">100% on-device private IndexedDB storage</p>
           </div>
         </div>
 
