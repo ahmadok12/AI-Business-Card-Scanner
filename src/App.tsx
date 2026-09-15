@@ -40,6 +40,7 @@ import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { ManualCardModal } from './components/ManualCardModal';
 import { AuthModal } from './components/AuthModal';
 import { PaymentProofModal } from './components/PaymentProofModal';
+import { OnboardingScreen } from './components/OnboardingScreen';
 import { ToastContainer } from './components/Toast';
 import type { ToastMessage } from './components/Toast';
 import type { StagedMediaItem } from './components/AttachedMediaSection';
@@ -50,6 +51,22 @@ export function App() {
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Onboarding Screen state
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('cardsnap_onboarding_done') !== 'true';
+    } catch {
+      return true;
+    }
+  });
+
+  const handleCompleteOnboarding = () => {
+    try {
+      localStorage.setItem('cardsnap_onboarding_done', 'true');
+    } catch {}
+    setShowOnboarding(false);
+  };
 
   // Supabase Auth & Cloud User State
   const [currentUser, setCurrentUser] = useState<{ id: string; email?: string } | null>(null);
@@ -587,6 +604,20 @@ export function App() {
             onSubmitted={() => {
               loadUserProfileData(currentUser.id, currentUser.email || '');
               showToast('success', 'Payment proof submitted! Admin will verify shortly.');
+            }}
+          />
+        )}
+
+        {/* Fullscreen Onboarding Screen */}
+        {showOnboarding && (
+          <OnboardingScreen
+            onComplete={handleCompleteOnboarding}
+            currentUser={currentUser}
+            userProfile={userProfile}
+            onAuthSuccess={(user) => {
+              setCurrentUser({ id: user.id, email: user.email });
+              loadUserProfileData(user.id, user.email || '');
+              showToast('success', `Signed in as ${user.email}`);
             }}
           />
         )}

@@ -14,6 +14,9 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 export interface UserProfile {
   id: string;
   email: string;
+  full_name?: string;
+  phone_number?: string;
+  company?: string;
   plan_tier: 'free' | 'pro';
   scans_used: number;
   max_scans: number;
@@ -65,11 +68,28 @@ export const verifyEmailOtp = async (
   token: string
 ): Promise<{ user: any | null; error: string | null }> => {
   try {
-    const { data, error } = await supabase.auth.verifyOtp({
-      email: email.trim().toLowerCase(),
-      token: token.trim(),
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanToken = token.trim();
+
+    // 1. Try verifying with type: 'email' (for existing or standard OTP logins)
+    let { data, error } = await supabase.auth.verifyOtp({
+      email: cleanEmail,
+      token: cleanToken,
       type: 'email'
     });
+
+    // 2. If it fails, fallback to type: 'signup' (in case GoTrue classified user creation as signup)
+    if (error) {
+      const signupAttempt = await supabase.auth.verifyOtp({
+        email: cleanEmail,
+        token: cleanToken,
+        type: 'signup'
+      });
+      if (!signupAttempt.error) {
+        data = signupAttempt.data;
+        error = null;
+      }
+    }
 
     if (error) {
       return { user: null, error: error.message };
@@ -146,6 +166,25 @@ export const getOrCreateUserProfile = async (
   } catch (err) {
     console.warn('Error fetching profile:', err);
     return null;
+  }
+};
+
+export const updateUserProfile = async (
+  userId: string,
+  updates: Partial<UserProfile>
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        ...updates
+      })
+      .eq('id', userId);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Failed to update profile' };
   }
 };
 

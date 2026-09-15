@@ -7,6 +7,9 @@
 CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
     email TEXT NOT NULL,
+    full_name TEXT,
+    phone_number TEXT,
+    company TEXT,
     plan_tier TEXT DEFAULT 'free' CHECK (plan_tier IN ('free', 'pro')),
     scans_used INTEGER DEFAULT 0,
     max_scans INTEGER DEFAULT 10,
