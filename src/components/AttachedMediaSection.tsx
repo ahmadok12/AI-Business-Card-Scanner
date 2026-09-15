@@ -149,16 +149,16 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
   };
 
   return (
-    <div className="bg-slate-50/95 rounded-2xl p-4 border border-slate-200/90 space-y-4">
+    <div className="bg-[#F8F6F4] rounded-[22px] p-4 border border-[#EDE8E1] space-y-4 shadow-[0_4px_14px_-2px_rgba(69,66,62,0.05)]">
       {/* Top Header: Section Manager */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-full bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center border border-[#FF5722]/20">
             <Layers className="w-3.5 h-3.5" />
           </div>
           <div>
-            <h4 className="font-bold text-xs text-slate-900">Product & Topic Sections</h4>
-            <p className="text-[10px] text-slate-400">Organize booth photos, voice memos & notes</p>
+            <h4 className="font-syne font-bold text-xs text-[#181716]">Product & Topic Sections</h4>
+            <p className="text-[10px] text-[#7C7875] font-grotesk">Organize booth photos, voice memos & notes</p>
           </div>
         </div>
 
@@ -166,9 +166,9 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
         <button
           type="button"
           onClick={handleAddSection}
-          className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] rounded-xl shadow-xs transition-transform active:scale-95"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#181716] hover:bg-[#2A2725] text-white font-grotesk font-semibold text-[11px] rounded-full shadow-sm transition-transform active:scale-95"
         >
-          <FolderPlus className="w-3.5 h-3.5" />
+          <FolderPlus className="w-3.5 h-3.5 text-[#FF5722]" />
           <span>+ Add Section</span>
         </button>
       </div>
@@ -183,10 +183,10 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
           return (
             <div
               key={index}
-              className="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-2xs space-y-3 transition-all"
+              className="bg-white rounded-[18px] p-3.5 border border-[#EDE8E1] shadow-[0_2px_8px_rgba(69,66,62,0.04)] space-y-3 transition-all"
             >
               {/* Section Name Header */}
-              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div className="flex items-center justify-between pb-2 border-b border-[#EDE8E1]">
                 {editingSectionIndex === index ? (
                   <div className="flex items-center gap-1.5 flex-1 mr-2">
                     <input
@@ -194,7 +194,7 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
                       value={editingName}
                       onChange={(e) => setEditingName(e.target.value)}
                       placeholder="e.g. Product A / Booth Samples..."
-                      className="w-full px-2.5 py-1 bg-slate-50 border border-indigo-300 rounded-lg text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-1 bg-[#F8F6F4] border border-[#FF5722] rounded-full text-xs font-grotesk font-semibold text-[#181716] focus:outline-none"
                       autoFocus
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleSaveRename(index);
@@ -203,23 +203,23 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
                     <button
                       type="button"
                       onClick={() => handleSaveRename(index)}
-                      className="p-1 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700"
+                      className="p-1.5 bg-emerald-600 text-white rounded-full hover:bg-emerald-700"
                     >
                       <Check className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="font-bold text-xs text-slate-900 truncate">{secName}</span>
+                    <span className="font-syne font-bold text-xs text-[#181716] truncate">{secName}</span>
                     <button
                       type="button"
                       onClick={() => handleStartRename(index, secName)}
-                      className="p-1 text-slate-400 hover:text-indigo-600 rounded-md transition-colors"
+                      className="p-1 text-[#7C7875] hover:text-[#FF5722] rounded-md transition-colors"
                       title="Rename section"
                     >
                       <Edit2 className="w-3 h-3" />
                     </button>
-                    <span className="text-[10px] px-1.5 py-0.2 bg-slate-100 text-slate-500 rounded-full font-semibold">
+                    <span className="text-[10px] px-2 py-0.5 bg-[#F8F6F4] text-[#7C7875] rounded-full font-grotesk font-medium border border-[#EDE8E1]">
                       {sectionItems.length} items
                     </span>
                   </div>
@@ -229,7 +229,7 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
                   <button
                     type="button"
                     onClick={() => handleDeleteSection(secName)}
-                    className="p-1 text-slate-400 hover:text-rose-600 rounded-md transition-colors ml-1"
+                    className="p-1 text-[#7C7875] hover:text-rose-600 rounded-md transition-colors ml-1"
                     title="Delete section"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -242,25 +242,25 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
                 <button
                   type="button"
                   onClick={() => triggerAddVoice(secName)}
-                  className="flex items-center justify-center gap-1.5 py-2 px-2 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-[11px] rounded-xl border border-rose-200/80 shadow-2xs transition-all active:scale-95"
+                  className="flex items-center justify-center gap-1.5 py-2 px-2 bg-[#FFF0EB] hover:bg-[#FFE6DC] text-[#FF5722] font-grotesk font-semibold text-[11px] rounded-full border border-[#FF5722]/20 shadow-2xs transition-all active:scale-95"
                 >
-                  <Mic className="w-3.5 h-3.5 text-rose-600" />
+                  <Mic className="w-3.5 h-3.5 text-[#FF5722]" />
                   <span>+ Voice</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => triggerAddPhoto(secName)}
-                  className="flex items-center justify-center gap-1.5 py-2 px-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[11px] rounded-xl border border-indigo-200/80 shadow-2xs transition-all active:scale-95"
+                  className="flex items-center justify-center gap-1.5 py-2 px-2 bg-[#F8F6F4] hover:bg-[#EDE8E1] text-[#181716] font-grotesk font-semibold text-[11px] rounded-full border border-[#EDE8E1] shadow-2xs transition-all active:scale-95"
                 >
-                  <Camera className="w-3.5 h-3.5 text-indigo-600" />
+                  <Camera className="w-3.5 h-3.5 text-[#181716]" />
                   <span>+ Photo</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => triggerAddText(secName)}
-                  className="flex items-center justify-center gap-1.5 py-2 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-[11px] rounded-xl border border-emerald-200/80 shadow-2xs transition-all active:scale-95"
+                  className="flex items-center justify-center gap-1.5 py-2 px-2 bg-[#E8F8F0] hover:bg-[#D4F3E4] text-emerald-800 font-grotesk font-semibold text-[11px] rounded-full border border-emerald-200/80 shadow-2xs transition-all active:scale-95"
                 >
                   <FileText className="w-3.5 h-3.5 text-emerald-600" />
                   <span>+ Note</span>
@@ -273,19 +273,19 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
                   {sectionItems.map((item) => (
                     <div
                       key={item.id}
-                      className="bg-slate-50/80 rounded-xl p-2.5 border border-slate-200/70 space-y-1.5"
+                      className="bg-[#F8F6F4] rounded-[14px] p-2.5 border border-[#EDE8E1] space-y-1.5"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5 truncate">
-                          {item.type === 'audio' && <Mic className="w-3.5 h-3.5 text-rose-500 shrink-0" />}
-                          {item.type === 'image' && <ImageIcon className="w-3.5 h-3.5 text-indigo-500 shrink-0" />}
-                          {item.type === 'text' && <FileText className="w-3.5 h-3.5 text-emerald-500 shrink-0" />}
-                          <span className="font-semibold text-xs text-slate-800 truncate">{item.title}</span>
+                          {item.type === 'audio' && <Mic className="w-3.5 h-3.5 text-[#FF5722] shrink-0" />}
+                          {item.type === 'image' && <ImageIcon className="w-3.5 h-3.5 text-[#181716] shrink-0" />}
+                          {item.type === 'text' && <FileText className="w-3.5 h-3.5 text-emerald-600 shrink-0" />}
+                          <span className="font-grotesk font-semibold text-xs text-[#181716] truncate">{item.title}</span>
                         </div>
                         <button
                           type="button"
                           onClick={() => onRemoveItem(item.id)}
-                          className="p-1 text-slate-400 hover:text-rose-600 rounded-md transition-colors"
+                          className="p-1 text-[#7C7875] hover:text-rose-600 rounded-md transition-colors"
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
@@ -299,7 +299,7 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
                       {/* Image thumbnail */}
                       {item.type === 'image' && item.dataUrl && (
                         <div
-                          className="relative aspect-16/9 rounded-lg overflow-hidden border border-slate-200 cursor-pointer bg-slate-900"
+                          className="relative aspect-16/9 rounded-[12px] overflow-hidden border border-[#EDE8E1] cursor-pointer bg-[#181716]"
                           onClick={() => setLightboxImage(item.dataUrl || null)}
                         >
                           <img src={item.dataUrl} alt={item.title} className="w-full h-full object-contain" />
@@ -308,7 +308,7 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
 
                       {/* Text note */}
                       {item.type === 'text' && item.textContent && (
-                        <p className="text-[11px] text-slate-700 bg-white p-2 rounded-lg whitespace-pre-line leading-relaxed border border-slate-200/60">
+                        <p className="text-[11px] text-[#181716] bg-white p-2.5 rounded-[10px] whitespace-pre-line leading-relaxed border border-[#EDE8E1] font-grotesk">
                           {item.textContent}
                         </p>
                       )}
@@ -316,7 +316,7 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
                   ))}
                 </div>
               ) : (
-                <p className="text-[10px] text-slate-400 text-center py-1.5 italic">
+                <p className="text-[10px] text-[#7C7875] text-center py-1.5 italic font-grotesk">
                   No media attached to {secName} yet. Tap + Voice, + Photo, or + Note above.
                 </p>
               )}
@@ -344,14 +344,14 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
 
       {/* Inline Text Note Creator Modal */}
       {isTextOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-4 border border-slate-100 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#181716]/60 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white w-full max-w-sm rounded-[24px] shadow-2xl p-5 border border-[#EDE8E1] space-y-3.5">
+            <div className="flex items-center justify-between pb-2 border-b border-[#EDE8E1]">
               <div>
-                <h4 className="text-xs font-bold text-slate-900">Add Text Note</h4>
-                <p className="text-[10px] text-indigo-600 font-semibold">To: {activeTargetSection}</p>
+                <h4 className="text-xs font-syne font-bold text-[#181716]">Add Text Note</h4>
+                <p className="text-[10px] text-[#FF5722] font-grotesk font-semibold">To: {activeTargetSection}</p>
               </div>
-              <button onClick={() => setIsTextOpen(false)} className="p-1 text-slate-400 hover:text-slate-600">
+              <button onClick={() => setIsTextOpen(false)} className="p-1.5 text-[#7C7875] hover:text-[#181716] rounded-full hover:bg-[#F8F6F4]">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -361,7 +361,7 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
               value={textTitle}
               onChange={(e) => setTextTitle(e.target.value)}
               placeholder="Title (e.g. Price Quote / Model Specs)..."
-              className="w-full px-3 py-1.5 bg-slate-50 border rounded-xl text-xs"
+              className="w-full px-3.5 py-2 bg-[#F8F6F4] border border-[#EDE8E1] rounded-xl text-xs font-grotesk text-[#181716] focus:outline-none focus:border-[#FF5722]"
             />
 
             <textarea
@@ -369,14 +369,14 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
               placeholder="Write note or memo for this product..."
-              className="w-full px-3 py-1.5 bg-slate-50 border rounded-xl text-xs resize-none"
+              className="w-full px-3.5 py-2 bg-[#F8F6F4] border border-[#EDE8E1] rounded-xl text-xs font-grotesk text-[#181716] resize-none focus:outline-none focus:border-[#FF5722]"
             />
 
             <div className="flex items-center gap-2 pt-1">
               <button
                 type="button"
                 onClick={() => setIsTextOpen(false)}
-                className="flex-1 py-2 bg-slate-100 text-slate-700 font-semibold text-xs rounded-xl"
+                className="flex-1 py-2 bg-[#F8F6F4] text-[#7C7875] hover:text-[#181716] font-grotesk font-semibold text-xs rounded-full border border-[#EDE8E1]"
               >
                 Cancel
               </button>
@@ -384,7 +384,7 @@ export const AttachedMediaSection: React.FC<AttachedMediaSectionProps> = ({
                 type="button"
                 onClick={handleTextSave}
                 disabled={!textInput.trim()}
-                className="flex-1 py-2 bg-emerald-600 text-white font-semibold text-xs rounded-xl disabled:opacity-50"
+                className="flex-1 py-2 bg-gradient-to-r from-[#FF5722] to-[#FF4500] text-white font-grotesk font-semibold text-xs rounded-full shadow-sm hover:brightness-105 disabled:opacity-50"
               >
                 Save Note
               </button>

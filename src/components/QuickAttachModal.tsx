@@ -73,49 +73,49 @@ export const QuickAttachModal: React.FC<QuickAttachModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 bg-slate-950/60 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-white w-full max-w-sm rounded-3xl p-5 border border-slate-100 shadow-2xl space-y-4">
-        <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-[#181716]/60 backdrop-blur-sm animate-in fade-in">
+      <div className="bg-white w-full max-w-sm rounded-[28px] p-5 border border-[#EDE8E1] shadow-2xl space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-[#EDE8E1]">
           <div>
-            <h3 className="font-bold text-sm text-slate-900">Attach Media</h3>
-            <p className="text-xs text-indigo-600 font-medium">To: {card.name}</p>
+            <h3 className="font-syne font-bold text-sm text-[#181716]">Attach Media</h3>
+            <p className="text-xs text-[#FF5722] font-grotesk font-semibold">To: {card.name}</p>
           </div>
-          <button onClick={onClose} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-full">
+          <button onClick={onClose} className="p-1.5 text-[#7C7875] hover:text-[#181716] rounded-full hover:bg-[#F8F6F4]">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-xs text-slate-500">Choose what you would like to attach:</p>
+        <p className="text-xs text-[#7C7875] font-grotesk">Choose what you would like to attach:</p>
 
         <div className="grid grid-cols-3 gap-2.5">
           <button
             onClick={() => setIsVoiceOpen(true)}
-            className="flex flex-col items-center justify-center p-3 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-2xl border border-rose-200 shadow-xs transition-transform active:scale-95 text-center gap-1"
+            className="flex flex-col items-center justify-center p-3 bg-[#FFF0EB] hover:bg-[#FFE6DC] text-[#FF5722] rounded-[20px] border border-[#FF5722]/20 shadow-xs transition-transform active:scale-95 text-center gap-1.5"
           >
-            <div className="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#FF5722] to-[#FF4500] text-white flex items-center justify-center shadow-sm">
               <Mic className="w-4 h-4" />
             </div>
-            <span className="text-[11px] font-bold">Voice Note</span>
+            <span className="text-[11px] font-grotesk font-bold">Voice Note</span>
           </button>
 
           <button
             onClick={() => setIsCameraOpen(true)}
-            className="flex flex-col items-center justify-center p-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-2xl border border-indigo-200 shadow-xs transition-transform active:scale-95 text-center gap-1"
+            className="flex flex-col items-center justify-center p-3 bg-[#F8F6F4] hover:bg-[#EDE8E1] text-[#181716] rounded-[20px] border border-[#EDE8E1] shadow-xs transition-transform active:scale-95 text-center gap-1.5"
           >
-            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-[#181716] text-white flex items-center justify-center shadow-sm">
               <Camera className="w-4 h-4" />
             </div>
-            <span className="text-[11px] font-bold">Photo / Back</span>
+            <span className="text-[11px] font-grotesk font-bold">Photo / Back</span>
           </button>
 
           <button
             onClick={() => setIsTextOpen(true)}
-            className="flex flex-col items-center justify-center p-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-2xl border border-emerald-200 shadow-xs transition-transform active:scale-95 text-center gap-1"
+            className="flex flex-col items-center justify-center p-3 bg-[#E8F8F0] hover:bg-[#D4F3E4] text-emerald-800 rounded-[20px] border border-emerald-200/70 shadow-xs transition-transform active:scale-95 text-center gap-1.5"
           >
-            <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-sm">
               <FileText className="w-4 h-4" />
             </div>
-            <span className="text-[11px] font-bold">Text Memo</span>
+            <span className="text-[11px] font-grotesk font-bold">Text Memo</span>
           </button>
         </div>
       </div>
@@ -136,11 +136,11 @@ export const QuickAttachModal: React.FC<QuickAttachModalProps> = ({
       />
 
       {isTextOpen && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-3 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-4 border border-slate-100 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <h4 className="text-xs font-bold text-slate-900">Add Text Memo</h4>
-              <button onClick={() => setIsTextOpen(false)} className="p-1 text-slate-400 hover:text-slate-600">
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-[#181716]/70 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white w-full max-w-sm rounded-[24px] shadow-2xl p-5 border border-[#EDE8E1] space-y-3.5">
+            <div className="flex items-center justify-between pb-2 border-b border-[#EDE8E1]">
+              <h4 className="text-xs font-syne font-bold text-[#181716]">Add Text Memo</h4>
+              <button onClick={() => setIsTextOpen(false)} className="p-1.5 text-[#7C7875] hover:text-[#181716] rounded-full hover:bg-[#F8F6F4]">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -149,26 +149,26 @@ export const QuickAttachModal: React.FC<QuickAttachModalProps> = ({
               value={noteTitle}
               onChange={(e) => setNoteTitle(e.target.value)}
               placeholder="Title (optional)..."
-              className="w-full px-3 py-1.5 bg-slate-50 border rounded-xl text-xs"
+              className="w-full px-3.5 py-2 bg-[#F8F6F4] border border-[#EDE8E1] rounded-xl text-xs font-grotesk text-[#181716] focus:outline-none focus:border-[#FF5722]"
             />
             <textarea
               rows={3}
               value={noteBody}
               onChange={(e) => setNoteBody(e.target.value)}
               placeholder="Type note for this contact..."
-              className="w-full px-3 py-1.5 bg-slate-50 border rounded-xl text-xs resize-none"
+              className="w-full px-3.5 py-2 bg-[#F8F6F4] border border-[#EDE8E1] rounded-xl text-xs font-grotesk text-[#181716] resize-none focus:outline-none focus:border-[#FF5722]"
             />
             <div className="flex items-center gap-2 pt-1">
               <button
                 onClick={() => setIsTextOpen(false)}
-                className="flex-1 py-2 bg-slate-100 text-slate-700 font-semibold text-xs rounded-xl"
+                className="flex-1 py-2 bg-[#F8F6F4] text-[#7C7875] hover:text-[#181716] font-grotesk font-semibold text-xs rounded-full border border-[#EDE8E1]"
               >
                 Cancel
               </button>
               <button
                 onClick={handleTextSave}
                 disabled={!noteBody.trim()}
-                className="flex-1 py-2 bg-emerald-600 text-white font-semibold text-xs rounded-xl disabled:opacity-50"
+                className="flex-1 py-2 bg-gradient-to-r from-[#FF5722] to-[#FF4500] text-white font-grotesk font-semibold text-xs rounded-full shadow-sm hover:brightness-105 disabled:opacity-50"
               >
                 Save Memo
               </button>

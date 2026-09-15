@@ -103,13 +103,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   return (
-    <div className={`bg-white rounded-2xl border border-slate-100 shadow-sm p-4 ${compact ? 'py-3' : 'p-4'}`}>
+    <div className={`bg-white rounded-[20px] border border-[#EDE8E1] shadow-[0_4px_14px_-2px_rgba(69,66,62,0.06)] p-4 ${compact ? 'py-3' : 'p-4'}`}>
       <audio ref={audioRef} src={src} preload="metadata" />
 
       {title && (
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2 text-slate-800 font-medium text-sm truncate">
-            <Volume2 className="w-4 h-4 text-indigo-500 shrink-0" />
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-2 text-[#181716] font-semibold text-sm truncate font-grotesk">
+            <Volume2 className="w-4 h-4 text-[#FF5722] shrink-0" />
             <span className="truncate">{title}</span>
           </div>
           <div className="flex items-center gap-1 shrink-0">
@@ -117,7 +117,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <button
                 onClick={downloadAudio}
                 title="Download recording"
-                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition-colors"
+                className="p-1.5 text-[#7C7875] hover:text-[#181716] rounded-full hover:bg-[#F8F6F4] transition-colors"
               >
                 <Download className="w-3.5 h-3.5" />
               </button>
@@ -126,7 +126,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
               <button
                 onClick={onDelete}
                 title="Delete recording"
-                className="p-1 text-rose-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+                className="p-1.5 text-rose-400 hover:text-rose-600 rounded-full hover:bg-rose-50 transition-colors"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
@@ -136,12 +136,12 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       )}
 
       {/* Track Bar & Controls */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2.5">
         <div className="flex items-center gap-3">
           {/* Play/Pause Button */}
           <button
             onClick={togglePlay}
-            className="w-10 h-10 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-600 flex items-center justify-center transition-transform active:scale-95 shrink-0 shadow-sm"
+            className="w-10 h-10 rounded-full bg-[#FFF0EB] hover:bg-[#FFE6DC] text-[#FF5722] flex items-center justify-center transition-all active:scale-95 shrink-0 shadow-sm border border-[#FF5722]/20"
           >
             {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
           </button>
@@ -155,9 +155,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
               step={0.1}
               value={currentTime}
               onChange={handleSeek}
-              className="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 hover:h-2 transition-all"
+              className="w-full h-1.5 bg-[#EDE8E1] rounded-lg appearance-none cursor-pointer accent-[#FF5722] hover:h-2 transition-all"
             />
-            <div className="flex justify-between items-center text-[11px] text-slate-400 font-mono mt-1">
+            <div className="flex justify-between items-center text-[11px] text-[#7C7875] font-grotesk font-medium mt-1">
               <span>{formatTime(currentTime)}</span>
               <span>{formatTime(totalDuration)}</span>
             </div>
@@ -165,17 +165,17 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         </div>
 
         {/* Speed Toggles (1x, 1.5x, 2x) */}
-        <div className="flex items-center justify-between pt-1 border-t border-slate-50">
-          <span className="text-[11px] text-slate-400 font-medium">Playback Speed</span>
-          <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg">
+        <div className="flex items-center justify-between pt-2 border-t border-[#EDE8E1]">
+          <span className="text-[11px] text-[#7C7875] font-grotesk font-semibold uppercase tracking-wider">Speed</span>
+          <div className="flex items-center gap-1 bg-[#F8F6F4] p-0.5 rounded-full border border-[#EDE8E1]">
             {[1, 1.5, 2].map((speed) => (
               <button
                 key={speed}
                 onClick={() => changeSpeed(speed)}
-                className={`px-2 py-0.5 text-xs font-semibold rounded-md transition-all ${
+                className={`px-2.5 py-0.5 text-xs font-semibold rounded-full font-grotesk transition-all ${
                   playbackRate === speed
-                    ? 'bg-white text-indigo-600 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800'
+                    ? 'bg-[#FF5722] text-white shadow-sm'
+                    : 'text-[#7C7875] hover:text-[#181716]'
                 }`}
               >
                 {speed}x

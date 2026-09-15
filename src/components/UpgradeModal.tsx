@@ -23,10 +23,10 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 bg-slate-950/70 backdrop-blur-md animate-in fade-in">
-      <div className="bg-white w-full max-w-sm rounded-3xl shadow-2xl border border-slate-100 flex flex-col max-h-[92vh] overflow-hidden my-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#181716]/70 backdrop-blur-md animate-in fade-in">
+      <div className="bg-white w-full max-w-sm rounded-[28px] shadow-2xl border border-[#EDE8E1] flex flex-col max-h-[92vh] overflow-hidden my-auto">
         {/* Banner */}
-        <div className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-slate-900 p-5 text-white relative text-center">
+        <div className="bg-[#181716] p-5 text-white relative text-center border-b border-white/5">
           <button
             onClick={onClose}
             className="absolute top-3 right-3 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
@@ -34,27 +34,27 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
             <X className="w-4 h-4" />
           </button>
 
-          <div className="w-12 h-12 rounded-2xl bg-amber-400 text-slate-900 flex items-center justify-center mx-auto mb-2 shadow-lg">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#FF5722] to-[#FF8A65] text-white flex items-center justify-center mx-auto mb-2.5 shadow-lg shadow-[#FF5722]/30">
             <Crown className="w-6 h-6 fill-current" />
           </div>
 
-          <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-400/20 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-400/30 inline-block mb-1.5">
+          <span className="text-[10px] font-grotesk font-bold uppercase tracking-wider bg-[#FF5722]/20 text-[#FF8A65] px-3 py-0.5 rounded-full border border-[#FF5722]/40 inline-block mb-1.5">
             Free Trial Limit Reached
           </span>
 
-          <h2 className="text-lg font-bold">Unlock Unlimited Scans</h2>
-          <p className="text-xs text-indigo-100/80 mt-0.5">
+          <h2 className="text-lg font-syne font-bold">Unlock Unlimited Scans</h2>
+          <p className="text-xs text-white/70 font-grotesk mt-0.5">
             You've used {scansUsed} of {maxScans} free OCR scans on this device.
           </p>
         </div>
 
         {/* Feature List */}
-        <div className="p-4 space-y-4 overflow-y-auto text-xs">
-          <div className="bg-indigo-50/60 rounded-2xl p-3 border border-indigo-100 space-y-2">
-            <h4 className="font-bold text-xs text-indigo-950 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> CardSnap Pro Features
+        <div className="p-4 space-y-4 overflow-y-auto text-xs font-grotesk">
+          <div className="bg-[#F8F6F4] rounded-[20px] p-3.5 border border-[#EDE8E1] space-y-2.5">
+            <h4 className="font-syne font-bold text-xs text-[#181716] flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#FF5722]" /> CardSnap Pro Features
             </h4>
-            <ul className="space-y-1.5 text-[11px] text-slate-700">
+            <ul className="space-y-1.5 text-[11px] text-[#181716]/80">
               <li className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span><strong>Unlimited AI OCR card scans</strong> with instant auto-capture</span>
@@ -76,74 +76,74 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
 
           {/* Pricing Plan Selector */}
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-slate-700 block">Choose a Plan</label>
+            <label className="text-[11px] font-grotesk font-bold text-[#181716] block uppercase tracking-wider">Choose a Plan</label>
 
             <div
               onClick={() => setSelectedPlan('annual')}
-              className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between relative ${
+              className={`p-3.5 rounded-[18px] border transition-all cursor-pointer flex items-center justify-between relative ${
                 selectedPlan === 'annual'
-                  ? 'border-indigo-600 bg-indigo-50/50 shadow-xs'
-                  : 'border-slate-200 bg-white hover:border-slate-300'
+                  ? 'border-[#FF5722] bg-[#FFF0EB]/50 shadow-xs'
+                  : 'border-[#EDE8E1] bg-white hover:border-[#181716]/20'
               }`}
             >
-              <span className="absolute -top-2 right-3 text-[9px] font-bold bg-indigo-600 text-white px-2 py-0.2 rounded-full shadow-xs">
+              <span className="absolute -top-2.5 right-3 text-[9px] font-grotesk font-bold bg-gradient-to-r from-[#FF5722] to-[#FF4500] text-white px-2.5 py-0.5 rounded-full shadow-xs">
                 BEST VALUE • SAVE 33%
               </span>
               <div>
-                <span className="font-bold text-xs text-slate-900 block">Annual Pro Plan</span>
-                <span className="text-[10px] text-slate-500">$3.33 / month (billed $39.99/yr)</span>
+                <span className="font-syne font-bold text-xs text-[#181716] block">Annual Pro Plan</span>
+                <span className="text-[10px] text-[#7C7875] font-grotesk">$3.33 / month (billed $39.99/yr)</span>
               </div>
               <div className="text-right">
-                <span className="font-bold text-sm text-indigo-600">$39.99</span>
-                <span className="text-[10px] text-slate-400 block">/ year</span>
+                <span className="font-syne font-bold text-sm text-[#FF5722]">$39.99</span>
+                <span className="text-[10px] text-[#7C7875] block font-grotesk">/ year</span>
               </div>
             </div>
 
             <div
               onClick={() => setSelectedPlan('monthly')}
-              className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+              className={`p-3.5 rounded-[18px] border transition-all cursor-pointer flex items-center justify-between ${
                 selectedPlan === 'monthly'
-                  ? 'border-indigo-600 bg-indigo-50/50 shadow-xs'
-                  : 'border-slate-200 bg-white hover:border-slate-300'
+                  ? 'border-[#FF5722] bg-[#FFF0EB]/50 shadow-xs'
+                  : 'border-[#EDE8E1] bg-white hover:border-[#181716]/20'
               }`}
             >
               <div>
-                <span className="font-bold text-xs text-slate-900 block">Monthly Pro Plan</span>
-                <span className="text-[10px] text-slate-500">Flexible month-to-month billing</span>
+                <span className="font-syne font-bold text-xs text-[#181716] block">Monthly Pro Plan</span>
+                <span className="text-[10px] text-[#7C7875] font-grotesk">Flexible month-to-month billing</span>
               </div>
               <div className="text-right">
-                <span className="font-bold text-sm text-slate-900">$4.99</span>
-                <span className="text-[10px] text-slate-400 block">/ month</span>
+                <span className="font-syne font-bold text-sm text-[#181716]">$4.99</span>
+                <span className="text-[10px] text-[#7C7875] block font-grotesk">/ month</span>
               </div>
             </div>
 
             <div
               onClick={() => setSelectedPlan('lifetime')}
-              className={`p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+              className={`p-3.5 rounded-[18px] border transition-all cursor-pointer flex items-center justify-between ${
                 selectedPlan === 'lifetime'
-                  ? 'border-indigo-600 bg-indigo-50/50 shadow-xs'
-                  : 'border-slate-200 bg-white hover:border-slate-300'
+                  ? 'border-[#FF5722] bg-[#FFF0EB]/50 shadow-xs'
+                  : 'border-[#EDE8E1] bg-white hover:border-[#181716]/20'
               }`}
             >
               <div>
-                <span className="font-bold text-xs text-slate-900 block">Lifetime Access</span>
-                <span className="text-[10px] text-slate-500">One-time payment, forever unlimited</span>
+                <span className="font-syne font-bold text-xs text-[#181716] block">Lifetime Access</span>
+                <span className="text-[10px] text-[#7C7875] font-grotesk">One-time payment, forever unlimited</span>
               </div>
               <div className="text-right">
-                <span className="font-bold text-sm text-slate-900">$79.00</span>
-                <span className="text-[10px] text-slate-400 block">one-time</span>
+                <span className="font-syne font-bold text-sm text-[#181716]">$79.00</span>
+                <span className="text-[10px] text-[#7C7875] block font-grotesk">one-time</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Action Footer */}
-        <div className="p-4 border-t border-slate-100 bg-white space-y-2">
+        <div className="p-4 border-t border-[#EDE8E1] bg-white space-y-2">
           <button
             onClick={onUpgradeSimulated}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold text-xs rounded-2xl shadow-md transition-transform active:scale-98"
+            className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-[#FF5722] to-[#FF4500] hover:brightness-105 text-white font-grotesk font-semibold text-xs rounded-full shadow-lg shadow-[#FF5722]/25 transition-transform active:scale-98"
           >
-            <Zap className="w-4 h-4 fill-current text-amber-300" />
+            <Zap className="w-4 h-4 fill-current text-amber-200" />
             <span>Upgrade to Unlimited ($39.99/yr)</span>
           </button>
 
@@ -153,7 +153,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
                 onClose();
                 onOpenSettings();
               }}
-              className="text-[11px] font-semibold text-slate-500 hover:text-indigo-600 transition-colors"
+              className="text-[11px] font-grotesk font-semibold text-[#7C7875] hover:text-[#FF5722] transition-colors"
             >
               Have your own Gemini API key? Enter in Settings →
             </button>

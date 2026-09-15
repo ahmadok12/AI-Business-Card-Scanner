@@ -138,21 +138,21 @@ export const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-100 flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#181716]/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white w-full max-w-md rounded-[28px] p-6 shadow-2xl border border-[#EDE8E1] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="flex items-center justify-between pb-3 border-b border-[#EDE8E1]">
           <div>
-            <h3 className="text-lg font-bold text-slate-800">
+            <h3 className="text-base font-syne font-bold text-[#181716]">
               {isRecording ? 'Recording Voice Note' : 'Voice Memo'}
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#FF5722] font-grotesk font-medium">
               {associatedCardName ? `Linked to ${associatedCardName}` : `Block: ${defaultBlockName}`}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+            className="p-1.5 text-[#7C7875] hover:text-[#181716] rounded-full hover:bg-[#F8F6F4] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -160,7 +160,7 @@ export const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
 
         {/* Error message */}
         {errorMsg && (
-          <div className="my-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl">
+          <div className="my-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl font-grotesk">
             {errorMsg}
           </div>
         )}
@@ -169,24 +169,24 @@ export const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
         {isRecording && (
           <div className="py-8 flex flex-col items-center justify-center">
             <div className="relative mb-6">
-              <div className="w-24 h-24 rounded-full bg-rose-100 recording-pulse flex items-center justify-center" />
+              <div className="w-24 h-24 rounded-full bg-[#FFF0EB] recording-pulse flex items-center justify-center" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-rose-500 text-white flex items-center justify-center shadow-lg shadow-rose-200">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-[#FF5722] to-[#FF4500] text-white flex items-center justify-center shadow-lg shadow-[#FF5722]/30">
                   <Mic className="w-8 h-8" />
                 </div>
               </div>
             </div>
 
-            <div className="text-3xl font-mono font-bold text-slate-800 mb-1">
+            <div className="text-3xl font-syne font-bold text-[#181716] mb-1">
               {formatTimer(seconds)}
             </div>
-            <p className="text-xs font-medium text-rose-500 animate-pulse">
+            <p className="text-xs font-grotesk font-semibold text-[#FF5722] animate-pulse">
               ● Recording in progress... Speak clearly
             </p>
 
             <button
               onClick={stopRecording}
-              className="mt-6 flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-2xl shadow-md transition-transform active:scale-95"
+              className="mt-6 flex items-center gap-2 px-6 py-3 bg-[#181716] hover:bg-[#2A2725] text-white font-grotesk font-semibold text-sm rounded-full shadow-md transition-transform active:scale-95"
             >
               <Square className="w-4 h-4 fill-current" />
               Stop & Review
@@ -198,33 +198,33 @@ export const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
         {!isRecording && recordedAudioUrl && (
           <div className="py-4 flex flex-col gap-4">
             <div>
-              <label className="text-xs font-semibold text-slate-600 mb-1 block">Title / Note Name</label>
+              <label className="text-xs font-grotesk font-semibold text-[#181716] mb-1.5 block">Title / Note Name</label>
               <input
                 type="text"
                 value={customTitle}
                 onChange={(e) => setCustomTitle(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2.5 bg-[#F8F6F4] border border-[#EDE8E1] rounded-xl text-sm font-grotesk text-[#181716] focus:outline-none focus:border-[#FF5722]"
                 placeholder="Enter title..."
               />
             </div>
 
             {/* Audio playback preview with 1x, 1.5x, 2x speeds */}
             <div>
-              <label className="text-xs font-semibold text-slate-600 mb-1 block">Preview Audio</label>
+              <label className="text-xs font-grotesk font-semibold text-[#7C7875] mb-1.5 block">Preview Audio</label>
               <AudioPlayer src={recordedAudioUrl} duration={recordedDuration || seconds} />
             </div>
 
             <div className="flex items-center gap-3 pt-2">
               <button
                 onClick={handleRerecord}
-                className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-2xl transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#F8F6F4] hover:bg-[#EDE8E1] text-[#181716] font-grotesk font-semibold text-sm rounded-full border border-[#EDE8E1] transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 Re-record
               </button>
               <button
                 onClick={handleSave}
-                className="flex-1 flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-2xl shadow-md transition-transform active:scale-95"
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-[#FF5722] to-[#FF4500] text-white font-grotesk font-semibold text-sm rounded-full shadow-md shadow-[#FF5722]/20 hover:brightness-105 transition-transform active:scale-95"
               >
                 <Save className="w-4 h-4" />
                 Save Note
@@ -238,11 +238,11 @@ export const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
           <div className="py-8 flex flex-col items-center justify-center">
             <button
               onClick={startRecording}
-              className="w-20 h-20 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-lg transition-transform active:scale-95"
+              className="w-20 h-20 rounded-full bg-gradient-to-r from-[#FF5722] to-[#FF4500] text-white flex items-center justify-center shadow-lg shadow-[#FF5722]/30 transition-transform active:scale-95"
             >
               <Mic className="w-8 h-8" />
             </button>
-            <p className="mt-4 text-sm font-medium text-slate-600">Tap to start recording</p>
+            <p className="mt-4 text-sm font-grotesk font-medium text-[#7C7875]">Tap to start recording</p>
           </div>
         )}
       </div>

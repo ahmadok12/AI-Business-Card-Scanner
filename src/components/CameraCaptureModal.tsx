@@ -107,14 +107,14 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
-      <div className="bg-slate-900 w-full max-w-md rounded-3xl overflow-hidden shadow-2xl flex flex-col text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#181716]/80 backdrop-blur-md animate-in fade-in">
+      <div className="bg-[#181716] w-full max-w-md rounded-[28px] overflow-hidden shadow-2xl flex flex-col text-white border border-white/10">
         {/* Top bar */}
-        <div className="flex items-center justify-between p-4 bg-slate-900/90 z-10">
-          <h3 className="font-semibold text-sm tracking-wide">{title}</h3>
+        <div className="flex items-center justify-between px-5 py-4 bg-[#181716]/90 border-b border-white/5 z-10">
+          <h3 className="font-syne font-bold text-sm tracking-wide text-white">{title}</h3>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white rounded-full bg-slate-800 transition-colors"
+            className="p-1.5 text-white/70 hover:text-white rounded-full bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -135,10 +135,10 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
               <canvas ref={canvasRef} className="hidden" />
 
               {cameraError && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-slate-900/95">
-                  <Camera className="w-12 h-12 text-slate-600 mb-3" />
-                  <p className="text-xs text-slate-300 mb-4">{cameraError}</p>
-                  <label className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold cursor-pointer">
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#181716]/95">
+                  <Camera className="w-12 h-12 text-[#FF5722]/50 mb-3" />
+                  <p className="text-xs text-white/70 font-grotesk mb-4">{cameraError}</p>
+                  <label className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FF5722] to-[#FF4500] hover:brightness-105 text-white rounded-full text-xs font-grotesk font-semibold cursor-pointer shadow-md">
                     <Upload className="w-4 h-4" />
                     Upload from Gallery
                     <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
@@ -150,19 +150,19 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
         </div>
 
         {/* Bottom controls */}
-        <div className="p-5 flex items-center justify-around bg-slate-950">
+        <div className="p-5 flex items-center justify-around bg-[#181716] border-t border-white/5">
           {capturedPhoto ? (
             <div className="flex items-center justify-between w-full px-4">
               <button
                 onClick={handleRetake}
-                className="flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-200 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/15 rounded-full text-xs font-grotesk font-semibold text-white transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 Retake
               </button>
               <button
                 onClick={handleConfirm}
-                className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-xs font-semibold text-white shadow-lg transition-transform active:scale-95"
+                className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#FF5722] to-[#FF4500] hover:brightness-105 rounded-full text-xs font-grotesk font-semibold text-white shadow-lg shadow-[#FF5722]/30 transition-transform active:scale-95"
               >
                 <Check className="w-4 h-4" />
                 Use Photo
@@ -171,7 +171,7 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
           ) : (
             <div className="flex items-center justify-between w-full px-6">
               {/* File upload fallback */}
-              <label className="p-3 text-slate-400 hover:text-white rounded-full bg-slate-800 cursor-pointer transition-colors">
+              <label className="p-3 text-white/70 hover:text-white rounded-full bg-white/10 cursor-pointer transition-colors">
                 <Upload className="w-5 h-5" />
                 <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
               </label>
@@ -179,15 +179,15 @@ export const CameraCaptureModal: React.FC<CameraCaptureModalProps> = ({
               {/* Shutter Button */}
               <button
                 onClick={takeSnapshot}
-                className="w-16 h-16 rounded-full border-4 border-white flex items-center justify-center p-1 transition-transform active:scale-90"
+                className="w-16 h-16 rounded-full border-4 border-[#FF5722] flex items-center justify-center p-1 transition-transform active:scale-90 shadow-[0_0_20px_rgba(255,87,34,0.4)]"
               >
-                <div className="w-full h-full rounded-full bg-white hover:bg-slate-200" />
+                <div className="w-full h-full rounded-full bg-white hover:bg-[#F8F6F4]" />
               </button>
 
               {/* Flip camera */}
               <button
                 onClick={switchCamera}
-                className="p-3 text-slate-400 hover:text-white rounded-full bg-slate-800 transition-colors"
+                className="p-3 text-white/70 hover:text-white rounded-full bg-white/10 transition-colors"
               >
                 <SwitchCamera className="w-5 h-5" />
               </button>

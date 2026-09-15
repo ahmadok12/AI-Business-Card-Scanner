@@ -270,12 +270,12 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-950 text-white animate-in fade-in select-none">
+    <div className="fixed inset-0 z-50 flex flex-col bg-[#181716] text-white animate-in fade-in select-none">
       {/* Top Header */}
-      <div className="flex items-center justify-between px-4 py-3.5 bg-slate-900/80 backdrop-blur-md z-20">
+      <div className="flex items-center justify-between px-5 py-3.5 bg-[#181716]/90 backdrop-blur-md z-20 border-b border-white/5">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-indigo-400" />
-          <span className="font-semibold text-sm">Smart Card Scanner</span>
+          <Sparkles className="w-5 h-5 text-[#FF5722]" />
+          <span className="font-syne font-bold text-sm text-white">Smart Card Scanner</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -285,19 +285,19 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
               setStabilityProgress(0);
               stabilityCounterRef.current = 0;
             }}
-            className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all ${
+            className={`px-3 py-1 rounded-full text-xs font-grotesk font-semibold flex items-center gap-1.5 transition-all ${
               isAutoCapture
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                : 'bg-slate-800 text-slate-400 border border-slate-700'
+                ? 'bg-[#FF5722]/20 text-[#FF8A65] border border-[#FF5722]/50'
+                : 'bg-white/10 text-white/60 border border-white/10'
             }`}
           >
-            <span className={`w-2 h-2 rounded-full ${isAutoCapture ? 'bg-emerald-400 animate-ping' : 'bg-slate-500'}`} />
+            <span className={`w-2 h-2 rounded-full ${isAutoCapture ? 'bg-[#FF5722] animate-ping' : 'bg-white/40'}`} />
             Auto-Capture {isAutoCapture ? 'ON' : 'OFF'}
           </button>
 
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white rounded-full bg-slate-800/80 transition-colors"
+            className="p-2 text-white/70 hover:text-white rounded-full bg-white/10 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -316,20 +316,20 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
 
         {/* Business Card Guide Box Overlay */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center p-6">
-          <div className="w-full max-w-sm aspect-7/4 rounded-2xl relative border-2 border-dashed border-indigo-400/80 scan-guide-active flex flex-col items-center justify-between p-4 shadow-[0_0_0_9999px_rgba(0,0,0,0.55)]">
-            <div className="absolute top-0 left-0 w-5 h-5 border-t-4 border-l-4 border-emerald-400 rounded-tl-xl -mt-1 -ml-1" />
-            <div className="absolute top-0 right-0 w-5 h-5 border-t-4 border-r-4 border-emerald-400 rounded-tr-xl -mt-1 -mr-1" />
-            <div className="absolute bottom-0 left-0 w-5 h-5 border-b-4 border-l-4 border-emerald-400 rounded-bl-xl -mb-1 -ml-1" />
-            <div className="absolute bottom-0 right-0 w-5 h-5 border-b-4 border-r-4 border-emerald-400 rounded-br-xl -mb-1 -mr-1" />
+          <div className="w-full max-w-sm aspect-7/4 rounded-2xl relative border-2 border-dashed border-[#FF5722]/80 flex flex-col items-center justify-between p-4 shadow-[0_0_0_9999px_rgba(24,23,22,0.65)]">
+            <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-[#FF5722] rounded-tl-xl -mt-1 -ml-1" />
+            <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-[#FF5722] rounded-tr-xl -mt-1 -mr-1" />
+            <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-[#FF5722] rounded-bl-xl -mb-1 -ml-1" />
+            <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-[#FF5722] rounded-br-xl -mb-1 -mr-1" />
 
-            <div className="bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-medium text-slate-200 tracking-wide border border-white/10">
+            <div className="bg-[#181716]/85 backdrop-blur-md px-3.5 py-1 rounded-full text-[11px] font-grotesk font-medium text-white/90 tracking-wide border border-white/10">
               Align card edges inside frame
             </div>
 
             {isAutoCapture && stabilityProgress > 0 && (
-              <div className="w-full bg-slate-800/80 backdrop-blur-md rounded-full h-2 p-0.5 border border-emerald-400/40">
+              <div className="w-full bg-[#181716]/80 backdrop-blur-md rounded-full h-2 p-0.5 border border-[#FF5722]/50">
                 <div
-                  className="bg-emerald-400 h-full rounded-full transition-all duration-150 shadow-[0_0_8px_#34d399]"
+                  className="bg-gradient-to-r from-[#FF5722] to-[#FF4500] h-full rounded-full transition-all duration-150 shadow-[0_0_10px_#FF5722]"
                   style={{ width: `${stabilityProgress}%` }}
                 />
               </div>
@@ -339,31 +339,31 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
 
         {/* Processing Spinner Overlay */}
         {isProcessing && (
-          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 z-30 animate-in fade-in">
+          <div className="absolute inset-0 bg-[#181716]/90 backdrop-blur-md flex flex-col items-center justify-center p-6 z-30 animate-in fade-in">
             <div className="relative mb-5">
-              <div className="w-20 h-20 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin flex items-center justify-center" />
-              <Sparkles className="w-8 h-8 text-indigo-400 absolute inset-0 m-auto animate-pulse" />
+              <div className="w-20 h-20 rounded-full border-4 border-[#FF5722]/20 border-t-[#FF5722] animate-spin flex items-center justify-center" />
+              <Sparkles className="w-8 h-8 text-[#FF5722] absolute inset-0 m-auto animate-pulse" />
             </div>
-            <h3 className="text-base font-bold text-white mb-1">Processing Business Card</h3>
-            <p className="text-xs text-slate-400 text-center max-w-xs">{processingStatus}</p>
+            <h3 className="text-base font-syne font-bold text-white mb-1">Processing Business Card</h3>
+            <p className="text-xs text-white/70 font-grotesk text-center max-w-xs">{processingStatus}</p>
           </div>
         )}
 
         {/* Error Notification & Action Overlay */}
         {errorMsg && (
-          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md p-6 flex flex-col items-center justify-center text-center z-40 animate-in fade-in">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center mb-3">
+          <div className="absolute inset-0 bg-[#181716]/95 backdrop-blur-md p-6 flex flex-col items-center justify-center text-center z-40 animate-in fade-in">
+            <div className="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center mb-3">
               <AlertCircle className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-white mb-1">OCR Scan Notice</h3>
-            <p className="text-xs text-rose-200/90 max-w-xs mb-5 leading-relaxed">{errorMsg}</p>
+            <h3 className="text-base font-syne font-bold text-white mb-1">OCR Scan Notice</h3>
+            <p className="text-xs text-rose-200/90 font-grotesk max-w-xs mb-5 leading-relaxed">{errorMsg}</p>
 
             <div className="flex flex-col gap-2.5 w-full max-w-xs">
               {capturedImageForRetry && (
                 <button
                   type="button"
                   onClick={() => runGeminiOCR(capturedImageForRetry)}
-                  className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all active:scale-98"
+                  className="w-full py-2.5 bg-gradient-to-r from-[#FF5722] to-[#FF4500] text-white font-grotesk font-semibold text-xs rounded-full shadow-lg transition-all active:scale-98"
                 >
                   Retry AI Extraction
                 </button>
@@ -373,7 +373,7 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
                 <button
                   type="button"
                   onClick={handleProceedManually}
-                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs rounded-xl transition-all"
+                  className="w-full py-2.5 bg-white/10 hover:bg-white/15 text-white font-grotesk font-semibold text-xs rounded-full transition-all"
                 >
                   Enter Details Manually
                 </button>
@@ -385,7 +385,7 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
                   setErrorMsg(null);
                   startCamera();
                 }}
-                className="w-full py-2 bg-transparent text-slate-400 hover:text-white font-medium text-xs transition-colors"
+                className="w-full py-2 bg-transparent text-white/60 hover:text-white font-grotesk font-medium text-xs transition-colors"
               >
                 Scan Another Card
               </button>
@@ -395,8 +395,8 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
       </div>
 
       {/* Bottom Shutter & Tool Controls */}
-      <div className="bg-slate-950 px-6 py-6 flex items-center justify-between z-20 border-t border-slate-900">
-        <label className="p-3.5 bg-slate-900 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white cursor-pointer transition-colors shadow-sm">
+      <div className="bg-[#181716] px-6 py-6 flex items-center justify-between z-20 border-t border-white/5">
+        <label className="p-3.5 bg-white/10 hover:bg-white/15 rounded-full text-white/80 hover:text-white cursor-pointer transition-colors shadow-sm">
           <Upload className="w-5 h-5" />
           <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
         </label>
@@ -404,10 +404,10 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
         <button
           onClick={captureAndProcess}
           disabled={isProcessing}
-          className="w-18 h-18 rounded-full border-4 border-indigo-400/80 p-1.5 flex items-center justify-center transition-transform active:scale-90 hover:border-emerald-400 shadow-[0_0_20px_rgba(99,102,241,0.3)]"
+          className="w-18 h-18 rounded-full border-4 border-[#FF5722]/80 p-1.5 flex items-center justify-center transition-transform active:scale-90 hover:border-[#FF5722] shadow-[0_0_24px_rgba(255,87,34,0.45)]"
         >
-          <div className="w-full h-full rounded-full bg-white hover:bg-slate-100 flex items-center justify-center text-slate-900 font-bold">
-            <Camera className="w-7 h-7 text-indigo-600" />
+          <div className="w-full h-full rounded-full bg-white hover:bg-[#F8F6F4] flex items-center justify-center text-[#181716] font-bold">
+            <Camera className="w-7 h-7 text-[#FF5722]" />
           </div>
         </button>
 
@@ -416,7 +416,7 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
             <button
               onClick={toggleTorch}
               className={`p-3.5 rounded-full transition-colors ${
-                isTorchOn ? 'bg-amber-400 text-slate-900' : 'bg-slate-900 text-slate-300 hover:text-white'
+                isTorchOn ? 'bg-amber-400 text-slate-900' : 'bg-white/10 text-white/80 hover:text-white'
               }`}
             >
               {isTorchOn ? <Zap className="w-5 h-5 fill-current" /> : <ZapOff className="w-5 h-5" />}
@@ -425,7 +425,7 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
 
           <button
             onClick={switchCamera}
-            className="p-3.5 bg-slate-900 hover:bg-slate-800 rounded-full text-slate-300 hover:text-white transition-colors"
+            className="p-3.5 bg-white/10 hover:bg-white/15 rounded-full text-white/80 hover:text-white transition-colors"
           >
             <SwitchCamera className="w-5 h-5" />
           </button>

@@ -90,29 +90,28 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
   }));
 
   const cleanWhatsappNumber = (current.whatsapp || current.phone || '').replace(/[^0-9]/g, '');
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-950/60 backdrop-blur-sm overflow-y-auto animate-in fade-in">
-      <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-100 flex flex-col max-h-[92vh] overflow-hidden my-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-md overflow-y-auto animate-in fade-in">
+      <div className="bg-[#FBF9F7] text-[#181716] w-full max-w-lg rounded-[28px] sm:rounded-[36px] shadow-porcelain border border-[#EDE8E1] flex flex-col max-h-[94vh] overflow-hidden my-auto font-grotesk">
         {/* Top Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 bg-white sticky top-0 z-10">
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3.5 border-b border-[#EDE8E1] bg-[#FBF9F7]/95 backdrop-blur-xl sticky top-0 z-20">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
-              {current.blockName}
+            <span className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-[#FFF0EB] text-[#FF5722] border border-[#FF5722]/30 uppercase tracking-wider">
+              {current.blockName || 'General'}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="p-2 text-slate-500 hover:text-indigo-600 rounded-full hover:bg-slate-100 transition-colors"
+              className="w-9 h-9 text-[#7C7875] hover:text-[#FF5722] rounded-full bg-white border border-[#EDE8E1] hover:border-[#FF5722]/30 flex items-center justify-center transition-colors shadow-2xs"
               title="Edit Card"
             >
               <Edit3 className="w-4 h-4" />
             </button>
             <button
               onClick={handleShare}
-              className="p-2 text-slate-500 hover:text-indigo-600 rounded-full hover:bg-slate-100 transition-colors"
+              className="w-9 h-9 text-[#7C7875] hover:text-[#FF5722] rounded-full bg-white border border-[#EDE8E1] hover:border-[#FF5722]/30 flex items-center justify-center transition-colors shadow-2xs"
               title="Share Contact"
             >
               <Share2 className="w-4 h-4" />
@@ -124,83 +123,87 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                   onClose();
                 }
               }}
-              className="p-2 text-rose-400 hover:text-rose-600 rounded-full hover:bg-rose-50 transition-colors"
+              className="w-9 h-9 text-[#7C7875] hover:text-rose-600 rounded-full bg-white border border-[#EDE8E1] hover:border-rose-300 flex items-center justify-center transition-colors shadow-2xs"
               title="Delete Contact"
             >
               <Trash2 className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors ml-1"
+              className="w-9 h-9 text-[#7C7875] hover:text-[#181716] rounded-full bg-white border border-[#EDE8E1] flex items-center justify-center transition-colors ml-1 shadow-2xs"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Scrollable Content */}
-        <div className="p-5 overflow-y-auto space-y-5 text-slate-700 text-xs">
+        <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs">
           {/* Scanned Image Banner */}
           {current.frontImageUrl && (
             <div
-              className="relative rounded-2xl overflow-hidden border border-slate-200 aspect-16/9 bg-slate-900 group cursor-pointer"
+              className="relative rounded-2xl overflow-hidden border border-[#EDE8E1] aspect-16/9 bg-[#181716] group cursor-pointer shadow-porcelain-sm"
               onClick={() => setLightboxImage(current.frontImageUrl || null)}
             >
               <img src={current.frontImageUrl} alt="Card Front" className="w-full h-full object-contain" />
-              <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-medium">
-                Click to view full image
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
+                Tap to view full image
               </div>
             </div>
           )}
 
           {/* Primary Contact Header */}
-          <div>
+          <div className="bg-white rounded-[22px] p-4 border border-[#EDE8E1] shadow-porcelain-sm">
             {isEditing ? (
               <div className="space-y-2">
                 <input
                   type="text"
                   value={editedCard?.name || ''}
                   onChange={(e) => setEditedCard(prev => prev ? { ...prev, name: e.target.value } : null)}
-                  className="w-full px-3 py-1.5 border rounded-xl font-bold text-base text-slate-900"
+                  className="w-full px-3 py-1.5 border border-[#EDE8E1] rounded-xl font-bold font-syne text-base text-[#181716] focus:outline-none focus:border-[#FF5722]"
                   placeholder="Name"
                 />
                 <input
                   type="text"
                   value={editedCard?.title || ''}
                   onChange={(e) => setEditedCard(prev => prev ? { ...prev, title: e.target.value } : null)}
-                  className="w-full px-3 py-1.5 border rounded-xl text-xs"
+                  className="w-full px-3 py-1.5 border border-[#EDE8E1] rounded-xl text-xs focus:outline-none focus:border-[#FF5722]"
                   placeholder="Job Title"
                 />
                 <input
                   type="text"
                   value={editedCard?.company || ''}
                   onChange={(e) => setEditedCard(prev => prev ? { ...prev, company: e.target.value } : null)}
-                  className="w-full px-3 py-1.5 border rounded-xl text-xs font-semibold text-indigo-600"
+                  className="w-full px-3 py-1.5 border border-[#EDE8E1] rounded-xl text-xs font-semibold text-[#FF5722] focus:outline-none focus:border-[#FF5722]"
                   placeholder="Company"
                 />
               </div>
             ) : (
               <div>
-                <h1 className="text-xl font-bold text-slate-900">{current.name}</h1>
-                {current.title && <p className="text-xs font-medium text-slate-600 mt-0.5">{current.title}</p>}
-                {current.company && <p className="text-xs font-bold text-indigo-600 mt-0.5">{current.company}</p>}
+                <h1 className="font-syne text-xl font-bold text-[#181716]">{current.name}</h1>
+                {current.title && <p className="text-xs font-medium text-[#7C7875] mt-0.5">{current.title}</p>}
+                {current.company && <p className="text-xs font-bold text-[#FF5722] mt-0.5">{current.company}</p>}
               </div>
             )}
           </div>
 
           {/* Quick Action Dial Buttons */}
-          <div className="grid grid-cols-4 gap-2 pt-1">
+          <div className="grid grid-cols-4 gap-2 pt-0.5">
             {current.phone ? (
               <a
                 href={`tel:${current.phone}`}
-                className="flex flex-col items-center justify-center p-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-2xl transition-all active:scale-95 text-center gap-1"
+                className="flex flex-col items-center justify-center p-2.5 bg-white hover:bg-[#F8F6F4] text-[#181716] rounded-2xl border border-[#EDE8E1] transition-all active:scale-95 text-center gap-1 shadow-2xs"
               >
-                <Phone className="w-4 h-4" />
-                <span className="text-[10px] font-semibold">Call</span>
+                <div className="w-8 h-8 rounded-full bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-bold">Call</span>
               </a>
             ) : (
-              <div className="flex flex-col items-center justify-center p-2.5 bg-slate-50 text-slate-300 rounded-2xl text-center gap-1 opacity-50">
-                <Phone className="w-4 h-4" />
+              <div className="flex flex-col items-center justify-center p-2.5 bg-white text-[#7C7875]/40 rounded-2xl text-center gap-1 border border-[#EDE8E1] opacity-60">
+                <div className="w-8 h-8 rounded-full bg-[#F5F3EF] flex items-center justify-center">
+                  <Phone className="w-4 h-4" />
+                </div>
                 <span className="text-[10px]">Call</span>
               </div>
             )}
@@ -210,14 +213,18 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                 href={`https://wa.me/${cleanWhatsappNumber}`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex flex-col items-center justify-center p-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl transition-all active:scale-95 text-center gap-1 shadow-xs"
+                className="flex flex-col items-center justify-center p-2.5 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-2xl transition-all active:scale-95 text-center gap-1 shadow-2xs"
               >
-                <MessageCircle className="w-4 h-4 fill-current" />
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 fill-current" />
+                </div>
                 <span className="text-[10px] font-bold">WhatsApp</span>
               </a>
             ) : (
-              <div className="flex flex-col items-center justify-center p-2.5 bg-slate-50 text-slate-300 rounded-2xl text-center gap-1 opacity-50">
-                <MessageCircle className="w-4 h-4" />
+              <div className="flex flex-col items-center justify-center p-2.5 bg-white text-[#7C7875]/40 rounded-2xl text-center gap-1 border border-[#EDE8E1] opacity-60">
+                <div className="w-8 h-8 rounded-full bg-[#F5F3EF] flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4" />
+                </div>
                 <span className="text-[10px]">WhatsApp</span>
               </div>
             )}
@@ -225,53 +232,61 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
             {current.email ? (
               <a
                 href={`mailto:${current.email}`}
-                className="flex flex-col items-center justify-center p-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-2xl transition-all active:scale-95 text-center gap-1"
+                className="flex flex-col items-center justify-center p-2.5 bg-white hover:bg-[#F8F6F4] text-[#181716] rounded-2xl border border-[#EDE8E1] transition-all active:scale-95 text-center gap-1 shadow-2xs"
               >
-                <Mail className="w-4 h-4" />
-                <span className="text-[10px] font-semibold">Email</span>
+                <div className="w-8 h-8 rounded-full bg-[#FFF0EB] text-[#FF5722] flex items-center justify-center">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-bold">Email</span>
               </a>
             ) : (
-              <div className="flex flex-col items-center justify-center p-2.5 bg-slate-50 text-slate-300 rounded-2xl text-center gap-1 opacity-50">
-                <Mail className="w-4 h-4" />
+              <div className="flex flex-col items-center justify-center p-2.5 bg-white text-[#7C7875]/40 rounded-2xl text-center gap-1 border border-[#EDE8E1] opacity-60">
+                <div className="w-8 h-8 rounded-full bg-[#F5F3EF] flex items-center justify-center">
+                  <Mail className="w-4 h-4" />
+                </div>
                 <span className="text-[10px]">Email</span>
               </div>
             )}
 
             <button
               onClick={() => downloadVCard(current)}
-              className="flex flex-col items-center justify-center p-2.5 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-2xl transition-all active:scale-95 text-center gap-1"
+              className="flex flex-col items-center justify-center p-2.5 bg-white hover:bg-[#F8F6F4] text-[#181716] rounded-2xl border border-[#EDE8E1] transition-all active:scale-95 text-center gap-1 shadow-2xs"
               title="Download vCard (.vcf)"
             >
-              <Download className="w-4 h-4" />
-              <span className="text-[10px] font-semibold">Save vCard</span>
+              <div className="w-8 h-8 rounded-full bg-[#EDE8E1] text-[#181716] flex items-center justify-center">
+                <Download className="w-4 h-4" />
+              </div>
+              <span className="text-[10px] font-bold">Save vCard</span>
             </button>
           </div>
 
           {/* Dedicated Media Section Block AFTER card is saved */}
-          <AttachedMediaSection
-            items={stagedItems}
-            onAddItem={handleAddMediaStaged}
-            onRemoveItem={onDeleteMedia}
-            defaultBlockName={card.blockName}
-            cardName={card.name}
-          />
+          <div className="pt-1">
+            <AttachedMediaSection
+              items={stagedItems}
+              onAddItem={handleAddMediaStaged}
+              onRemoveItem={onDeleteMedia}
+              defaultBlockName={card.blockName}
+              cardName={card.name}
+            />
+          </div>
 
           {/* QR Codes Display Section (WhatsApp QR & WeChat QR) */}
           {(current.whatsappQrUrl || current.wechatQrUrl) && (
-            <div className="bg-emerald-50/70 rounded-2xl p-4 border border-emerald-200/80 space-y-3">
+            <div className="bg-[#F8F6F4] rounded-[22px] p-4 border border-[#EDE8E1] space-y-3 shadow-2xs">
               <div className="flex items-center gap-1.5">
-                <QrCode className="w-4 h-4 text-emerald-700" />
-                <h3 className="font-bold text-xs text-emerald-950">Scanned QR Codes</h3>
+                <QrCode className="w-4 h-4 text-[#10B981]" />
+                <h3 className="font-syne font-bold text-xs text-[#181716]">Scanned QR Codes</h3>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 {current.whatsappQrUrl && (
-                  <div className="bg-white rounded-2xl p-3 border border-emerald-200 flex flex-col items-center text-center shadow-xs">
-                    <span className="text-[11px] font-bold text-emerald-900 mb-1.5 flex items-center gap-1">
-                      <MessageCircle className="w-3.5 h-3.5 text-emerald-600" /> WhatsApp QR
+                  <div className="bg-white rounded-2xl p-3 border border-[#EDE8E1] flex flex-col items-center text-center shadow-2xs">
+                    <span className="text-[11px] font-bold text-[#181716] mb-1.5 flex items-center gap-1">
+                      <MessageCircle className="w-3.5 h-3.5 text-[#10B981]" /> WhatsApp QR
                     </span>
                     <div
-                      className="w-24 h-24 rounded-xl overflow-hidden border border-slate-200 cursor-pointer p-1 bg-white hover:scale-105 transition-transform shadow-2xs mb-2"
+                      className="w-24 h-24 rounded-xl overflow-hidden border border-[#EDE8E1] cursor-pointer p-1 bg-white hover:scale-105 transition-transform shadow-2xs mb-2"
                       onClick={() => setLightboxImage(current.whatsappQrUrl || null)}
                       title="Tap to enlarge"
                     >
@@ -283,7 +298,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                         e.stopPropagation();
                         downloadImageToDevice(current.whatsappQrUrl!, `${current.name}_WhatsApp_QR.png`);
                       }}
-                      className="w-full flex items-center justify-center gap-1 py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded-lg transition-colors border border-emerald-200/80"
+                      className="w-full flex items-center justify-center gap-1 py-1.5 px-2 bg-[#FFF0EB] hover:bg-[#ffe5dc] text-[#FF5722] font-bold text-[10px] rounded-full transition-colors border border-[#FF5722]/30"
                     >
                       <Download className="w-3 h-3" /> Save to Device
                     </button>
@@ -291,12 +306,12 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                 )}
 
                 {current.wechatQrUrl && (
-                  <div className="bg-white rounded-2xl p-3 border border-emerald-200 flex flex-col items-center text-center shadow-xs">
-                    <span className="text-[11px] font-bold text-emerald-900 mb-1.5 flex items-center gap-1">
-                      <MessageSquare className="w-3.5 h-3.5 text-emerald-600" /> WeChat QR
+                  <div className="bg-white rounded-2xl p-3 border border-[#EDE8E1] flex flex-col items-center text-center shadow-2xs">
+                    <span className="text-[11px] font-bold text-[#181716] mb-1.5 flex items-center gap-1">
+                      <MessageSquare className="w-3.5 h-3.5 text-[#10B981]" /> WeChat QR
                     </span>
                     <div
-                      className="w-24 h-24 rounded-xl overflow-hidden border border-slate-200 cursor-pointer p-1 bg-white hover:scale-105 transition-transform shadow-2xs mb-2"
+                      className="w-24 h-24 rounded-xl overflow-hidden border border-[#EDE8E1] cursor-pointer p-1 bg-white hover:scale-105 transition-transform shadow-2xs mb-2"
                       onClick={() => setLightboxImage(current.wechatQrUrl || null)}
                       title="Tap to enlarge"
                     >
@@ -308,7 +323,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
                         e.stopPropagation();
                         downloadImageToDevice(current.wechatQrUrl!, `${current.name}_WeChat_QR.png`);
                       }}
-                      className="w-full flex items-center justify-center gap-1 py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded-lg transition-colors border border-emerald-200/80"
+                      className="w-full flex items-center justify-center gap-1 py-1.5 px-2 bg-[#FFF0EB] hover:bg-[#ffe5dc] text-[#FF5722] font-bold text-[10px] rounded-full transition-colors border border-[#FF5722]/30"
                     >
                       <Download className="w-3 h-3" /> Save to Device
                     </button>
@@ -319,19 +334,19 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
           )}
 
           {/* Complete Contact Information Details */}
-          <div className="bg-slate-50 rounded-2xl p-4 space-y-3.5 border border-slate-100">
-            <h3 className="font-bold text-xs text-slate-900 border-b border-slate-200/60 pb-2">
+          <div className="bg-white rounded-[22px] p-4 space-y-3.5 border border-[#EDE8E1] shadow-porcelain-sm">
+            <h3 className="font-syne font-bold text-xs text-[#181716] border-b border-[#EDE8E1] pb-2">
               Complete Contact Details
             </h3>
 
             {/* Phones */}
             {current.phone && (
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-slate-500">
-                  <Phone className="w-3.5 h-3.5 text-emerald-500" />
+                <div className="flex items-center gap-2.5 text-[#7C7875]">
+                  <Phone className="w-3.5 h-3.5 text-[#FF5722]" />
                   <span>Primary Phone</span>
                 </div>
-                <a href={`tel:${current.phone}`} className="font-mono text-xs font-semibold text-slate-900 hover:text-emerald-600">
+                <a href={`tel:${current.phone}`} className="font-mono text-xs font-bold text-[#181716] hover:text-[#FF5722]">
                   {current.phone}
                 </a>
               </div>
@@ -339,11 +354,11 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
             {current.secondaryPhone && (
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-slate-500">
-                  <Phone className="w-3.5 h-3.5 text-slate-400" />
+                <div className="flex items-center gap-2.5 text-[#7C7875]">
+                  <Phone className="w-3.5 h-3.5 text-[#7C7875]" />
                   <span>Alternate Phone</span>
                 </div>
-                <a href={`tel:${current.secondaryPhone}`} className="font-mono text-xs font-semibold text-slate-900 hover:text-emerald-600">
+                <a href={`tel:${current.secondaryPhone}`} className="font-mono text-xs font-semibold text-[#181716] hover:text-[#FF5722]">
                   {current.secondaryPhone}
                 </a>
               </div>
@@ -352,15 +367,15 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
             {/* WhatsApp */}
             {current.whatsapp && (
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-emerald-700">
-                  <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                <div className="flex items-center gap-2.5 text-[#7C7875]">
+                  <MessageCircle className="w-3.5 h-3.5 text-[#10B981]" />
                   <span>WhatsApp</span>
                 </div>
                 <a
                   href={`https://wa.me/${cleanWhatsappNumber}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-mono text-xs font-bold text-emerald-600 hover:underline flex items-center gap-1"
+                  className="font-mono text-xs font-bold text-[#10B981] hover:underline flex items-center gap-1"
                 >
                   {current.whatsapp} <ExternalLink className="w-3 h-3" />
                 </a>
@@ -370,18 +385,18 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
             {/* WeChat */}
             {current.wechat && (
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-emerald-700">
-                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                <div className="flex items-center gap-2.5 text-[#7C7875]">
+                  <MessageSquare className="w-3.5 h-3.5 text-[#10B981]" />
                   <span>WeChat ID</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-mono text-xs font-bold text-slate-900">{current.wechat}</span>
+                  <span className="font-mono text-xs font-bold text-[#181716]">{current.wechat}</span>
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(current.wechat || '');
                       alert('WeChat ID copied to clipboard!');
                     }}
-                    className="text-[10px] bg-slate-200 hover:bg-slate-300 px-2 py-0.5 rounded text-slate-700 font-semibold"
+                    className="text-[10px] bg-[#EDE8E1] hover:bg-[#E0DAD1] px-2 py-0.5 rounded-full text-[#181716] font-bold"
                   >
                     Copy
                   </button>
@@ -392,11 +407,11 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
             {/* Email */}
             {current.email && (
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-slate-500">
-                  <Mail className="w-3.5 h-3.5 text-blue-500" />
+                <div className="flex items-center gap-2.5 text-[#7C7875]">
+                  <Mail className="w-3.5 h-3.5 text-[#FF5722]" />
                   <span>Email</span>
                 </div>
-                <a href={`mailto:${current.email}`} className="text-xs font-semibold text-blue-600 hover:underline truncate max-w-[200px]">
+                <a href={`mailto:${current.email}`} className="text-xs font-semibold text-[#181716] hover:text-[#FF5722] hover:underline truncate max-w-[200px]">
                   {current.email}
                 </a>
               </div>
@@ -405,15 +420,15 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
             {/* Website */}
             {current.website && (
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-slate-500">
-                  <Globe className="w-3.5 h-3.5 text-indigo-500" />
+                <div className="flex items-center gap-2.5 text-[#7C7875]">
+                  <Globe className="w-3.5 h-3.5 text-[#FF5722]" />
                   <span>Website</span>
                 </div>
                 <a
                   href={current.website.startsWith('http') ? current.website : `https://${current.website}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-xs font-semibold text-indigo-600 hover:underline truncate max-w-[200px]"
+                  className="text-xs font-semibold text-[#181716] hover:text-[#FF5722] hover:underline truncate max-w-[200px]"
                 >
                   {current.website}
                 </a>
@@ -422,16 +437,16 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
             {/* Address */}
             {current.address && (
-              <div className="flex items-start justify-between gap-4 pt-1 border-t border-slate-200/50">
-                <div className="flex items-center gap-2.5 text-slate-500 shrink-0">
-                  <MapPin className="w-3.5 h-3.5 text-rose-500" />
+              <div className="flex items-start justify-between gap-4 pt-1 border-t border-[#EDE8E1]">
+                <div className="flex items-center gap-2.5 text-[#7C7875] shrink-0">
+                  <MapPin className="w-3.5 h-3.5 text-[#FF5722]" />
                   <span>Address</span>
                 </div>
                 <a
                   href={`https://maps.google.com/?q=${encodeURIComponent(current.address)}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-xs text-slate-900 text-right hover:text-indigo-600 hover:underline"
+                  className="text-xs text-[#181716] text-right hover:text-[#FF5722] hover:underline"
                 >
                   {current.address}
                 </a>
@@ -440,21 +455,21 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
             {/* Social Links */}
             {current.socialLinks && (
-              <div className="flex items-center justify-between pt-1 border-t border-slate-200/50">
-                <div className="flex items-center gap-2.5 text-slate-500 shrink-0">
-                  <Globe className="w-3.5 h-3.5 text-purple-500" />
+              <div className="flex items-center justify-between pt-1 border-t border-[#EDE8E1]">
+                <div className="flex items-center gap-2.5 text-[#7C7875] shrink-0">
+                  <Globe className="w-3.5 h-3.5 text-[#FF5722]" />
                   <span>Social Handles</span>
                 </div>
-                <span className="text-xs text-slate-900 truncate max-w-[200px]">{current.socialLinks}</span>
+                <span className="text-xs text-[#181716] truncate max-w-[200px]">{current.socialLinks}</span>
               </div>
             )}
 
             {/* Tags */}
             {current.tags && current.tags.length > 0 && (
-              <div className="flex items-center gap-2 pt-1 border-t border-slate-200/50 flex-wrap">
-                <Tag className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center gap-2 pt-1 border-t border-[#EDE8E1] flex-wrap">
+                <Tag className="w-3.5 h-3.5 text-[#7C7875]" />
                 {current.tags.map((tag) => (
-                  <span key={tag} className="text-[10px] font-semibold px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded-md">
+                  <span key={tag} className="text-[10px] font-bold px-2.5 py-0.5 bg-[#EDE8E1] text-[#181716] rounded-full">
                     #{tag}
                   </span>
                 ))}
@@ -463,19 +478,19 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
             {/* Notes */}
             {current.notes && (
-              <div className="pt-2 border-t border-slate-200/50 space-y-1">
-                <div className="flex items-center gap-2 text-slate-500">
-                  <FileText className="w-3.5 h-3.5 text-slate-400" />
-                  <span className="font-semibold text-[11px] uppercase tracking-wider">Notes & Slogans</span>
+              <div className="pt-2 border-t border-[#EDE8E1] space-y-1">
+                <div className="flex items-center gap-2 text-[#7C7875]">
+                  <FileText className="w-3.5 h-3.5 text-[#FF5722]" />
+                  <span className="font-bold text-[11px] uppercase tracking-wider">Notes & Intelligence</span>
                 </div>
-                <p className="text-xs text-slate-700 bg-white p-2.5 rounded-xl border border-slate-200/70 whitespace-pre-line leading-relaxed">
-                  {current.notes}
+                <p className="text-xs text-[#2B2927] bg-[#F8F6F4] p-3 rounded-xl border border-[#EDE8E1] whitespace-pre-line leading-relaxed italic">
+                  "{current.notes}"
                 </p>
               </div>
             )}
 
             {/* Timestamp */}
-            <div className="flex items-center gap-1.5 text-[10px] text-slate-400 pt-2 border-t border-slate-200/40">
+            <div className="flex items-center gap-1.5 text-[10px] text-[#7C7875] pt-2 border-t border-[#EDE8E1]">
               <Calendar className="w-3 h-3" />
               <span>Saved on {new Date(current.createdAt).toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' })}</span>
             </div>
@@ -484,16 +499,16 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
 
         {/* Edit Footer */}
         {isEditing && (
-          <div className="p-4 border-t border-slate-100 bg-white sticky bottom-0 z-10 flex items-center gap-3">
+          <div className="p-4 border-t border-[#EDE8E1] bg-[#FBF9F7] sticky bottom-0 z-20 flex items-center gap-3">
             <button
               onClick={() => setIsEditing(false)}
-              className="flex-1 py-2.5 bg-slate-100 text-slate-700 font-semibold text-xs rounded-xl"
+              className="flex-1 py-2.5 bg-[#EDE8E1] hover:bg-[#E0DAD1] text-[#181716] font-bold text-xs rounded-full"
             >
               Cancel
             </button>
             <button
               onClick={handleSaveEdit}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-indigo-600 text-white font-semibold text-xs rounded-xl shadow-md"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-gradient-to-r from-[#FF5722] to-[#FF4500] hover:opacity-95 text-white font-bold text-xs rounded-full shadow-solar"
             >
               <Check className="w-4 h-4" /> Save Changes
             </button>
@@ -511,7 +526,7 @@ export const CardDetailModal: React.FC<CardDetailModalProps> = ({
             <button
               type="button"
               onClick={() => downloadImageToDevice(lightboxImage, `${current.name}_scanned_image.png`)}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl text-xs font-semibold backdrop-blur-md transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-white/20 hover:bg-white/30 text-white rounded-full text-xs font-semibold backdrop-blur-md transition-colors"
             >
               <Download className="w-4 h-4" />
               <span>Save to Device</span>

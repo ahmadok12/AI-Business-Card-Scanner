@@ -265,12 +265,12 @@ export function App() {
 
   if (isLoading || !settings) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#FBF9F7] flex items-center justify-center p-4">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center animate-bounce">
-            <span className="font-bold text-xl">CS</span>
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#FF5722] to-[#FF4500] text-white flex items-center justify-center shadow-solar animate-bounce">
+            <span className="font-bold text-xl font-syne">CS</span>
           </div>
-          <p className="text-xs font-semibold text-slate-500">Initializing CardSnap AI...</p>
+          <p className="text-xs font-semibold text-[#7C7875]">Initializing CardSnap AI...</p>
         </div>
       </div>
     );
@@ -281,8 +281,8 @@ export function App() {
     : [];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex justify-center selection:bg-indigo-100 selection:text-indigo-900">
-      <div className="w-full max-w-md min-h-screen bg-slate-50 flex flex-col relative px-4 pt-4">
+    <div className="min-h-screen bg-[#FBF9F7] text-[#181716] flex justify-center selection:bg-[#FF5722] selection:text-white font-grotesk">
+      <div className="w-full max-w-md min-h-screen bg-[#FBF9F7] flex flex-col relative px-4 pt-4">
         <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
         <main className="flex-1">
