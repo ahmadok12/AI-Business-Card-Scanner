@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Sparkles, Check, X, ShieldCheck, Zap, Crown, CreditCard } from 'lucide-react';
+import { Sparkles, Check, X, Crown, ReceiptText, Clock, Zap } from 'lucide-react';
+import type { PaymentRequest } from '../services/supabase';
 
 interface UpgradeModalProps {
   isOpen: boolean;
@@ -8,6 +9,8 @@ interface UpgradeModalProps {
   maxScans: number;
   onUpgradeSimulated: () => void;
   onOpenSettings: () => void;
+  onOpenPaymentProof?: (plan: 'annual' | 'monthly' | 'lifetime') => void;
+  pendingPayment?: PaymentRequest | null;
 }
 
 export const UpgradeModal: React.FC<UpgradeModalProps> = ({
@@ -16,11 +19,19 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
   scansUsed,
   maxScans,
   onUpgradeSimulated,
-  onOpenSettings
+  onOpenSettings,
+  onOpenPaymentProof,
+  pendingPayment
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual' | 'lifetime'>('annual');
 
   if (!isOpen) return null;
+
+  const planPrices = {
+    annual: '$39.99/yr',
+    monthly: '$4.99/mo',
+    lifetime: '$79.00 once'
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#181716]/70 backdrop-blur-md animate-in fade-in">
@@ -48,8 +59,20 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
           </p>
         </div>
 
-        {/* Feature List */}
-        <div className="p-4 space-y-4 overflow-y-auto text-xs font-grotesk">
+        {/* Feature List & Options */}
+        <div className="p-4 space-y-3.5 overflow-y-auto text-xs font-grotesk">
+          {pendingPayment && (
+            <div className="bg-amber-50 border border-amber-200 rounded-[18px] p-3 text-amber-900 text-xs flex items-start gap-2.5">
+              <Clock className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold font-syne text-[11px]">Payment Proof Under Review</p>
+                <p className="text-[10px] text-amber-700 font-grotesk mt-0.5 leading-relaxed">
+                  Ref #{pendingPayment.transaction_reference || pendingPayment.id.slice(0, 8)}. Admin is verifying your transfer. Pro will activate as soon as approved!
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="bg-[#F8F6F4] rounded-[20px] p-3.5 border border-[#EDE8E1] space-y-2.5">
             <h4 className="font-syne font-bold text-xs text-[#181716] flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[#FF5722]" /> CardSnap Pro Features
@@ -80,7 +103,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
 
             <div
               onClick={() => setSelectedPlan('annual')}
-              className={`p-3.5 rounded-[18px] border transition-all cursor-pointer flex items-center justify-between relative ${
+              className={`p-3 rounded-[18px] border transition-all cursor-pointer flex items-center justify-between relative ${
                 selectedPlan === 'annual'
                   ? 'border-[#FF5722] bg-[#FFF0EB]/50 shadow-xs'
                   : 'border-[#EDE8E1] bg-white hover:border-[#181716]/20'
@@ -91,7 +114,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
               </span>
               <div>
                 <span className="font-syne font-bold text-xs text-[#181716] block">Annual Pro Plan</span>
-                <span className="text-[10px] text-[#7C7875] font-grotesk">$3.33 / month (billed $39.99/yr)</span>
+                <span className="text-[10px] text-[#7C7875] font-grotesk">$3.33 / mo ($39.99/yr)</span>
               </div>
               <div className="text-right">
                 <span className="font-syne font-bold text-sm text-[#FF5722]">$39.99</span>
@@ -101,7 +124,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
 
             <div
               onClick={() => setSelectedPlan('monthly')}
-              className={`p-3.5 rounded-[18px] border transition-all cursor-pointer flex items-center justify-between ${
+              className={`p-3 rounded-[18px] border transition-all cursor-pointer flex items-center justify-between ${
                 selectedPlan === 'monthly'
                   ? 'border-[#FF5722] bg-[#FFF0EB]/50 shadow-xs'
                   : 'border-[#EDE8E1] bg-white hover:border-[#181716]/20'
@@ -109,7 +132,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
             >
               <div>
                 <span className="font-syne font-bold text-xs text-[#181716] block">Monthly Pro Plan</span>
-                <span className="text-[10px] text-[#7C7875] font-grotesk">Flexible month-to-month billing</span>
+                <span className="text-[10px] text-[#7C7875] font-grotesk">Flexible month-to-month</span>
               </div>
               <div className="text-right">
                 <span className="font-syne font-bold text-sm text-[#181716]">$4.99</span>
@@ -119,7 +142,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
 
             <div
               onClick={() => setSelectedPlan('lifetime')}
-              className={`p-3.5 rounded-[18px] border transition-all cursor-pointer flex items-center justify-between ${
+              className={`p-3 rounded-[18px] border transition-all cursor-pointer flex items-center justify-between ${
                 selectedPlan === 'lifetime'
                   ? 'border-[#FF5722] bg-[#FFF0EB]/50 shadow-xs'
                   : 'border-[#EDE8E1] bg-white hover:border-[#181716]/20'
@@ -127,7 +150,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
             >
               <div>
                 <span className="font-syne font-bold text-xs text-[#181716] block">Lifetime Access</span>
-                <span className="text-[10px] text-[#7C7875] font-grotesk">One-time payment, forever unlimited</span>
+                <span className="text-[10px] text-[#7C7875] font-grotesk">One-time payment, forever</span>
               </div>
               <div className="text-right">
                 <span className="font-syne font-bold text-sm text-[#181716]">$79.00</span>
@@ -139,12 +162,25 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
 
         {/* Action Footer */}
         <div className="p-4 border-t border-[#EDE8E1] bg-white space-y-2">
+          {onOpenPaymentProof && (
+            <button
+              onClick={() => {
+                onClose();
+                onOpenPaymentProof(selectedPlan);
+              }}
+              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-[#FF5722] to-[#FF4500] hover:brightness-105 text-white font-grotesk font-semibold text-xs rounded-full shadow-lg shadow-[#FF5722]/25 transition-transform active:scale-98"
+            >
+              <ReceiptText className="w-4 h-4 text-white" />
+              <span>Pay & Submit Proof ({planPrices[selectedPlan]})</span>
+            </button>
+          )}
+
           <button
             onClick={onUpgradeSimulated}
-            className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-[#FF5722] to-[#FF4500] hover:brightness-105 text-white font-grotesk font-semibold text-xs rounded-full shadow-lg shadow-[#FF5722]/25 transition-transform active:scale-98"
+            className="w-full flex items-center justify-center gap-1.5 py-2.5 bg-[#F5F3EF] hover:bg-[#EDE8E1] text-[#181716] font-grotesk font-semibold text-[11px] rounded-full transition-colors border border-[#EDE8E1]"
           >
-            <Zap className="w-4 h-4 fill-current text-amber-200" />
-            <span>Upgrade to Unlimited ($39.99/yr)</span>
+            <Zap className="w-3.5 h-3.5 fill-current text-amber-500" />
+            <span>Instant Test Upgrade (Simulate)</span>
           </button>
 
           <div className="text-center pt-1">

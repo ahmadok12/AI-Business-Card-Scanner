@@ -16,6 +16,14 @@ import {
   seedDemoData,
   clearAllDatabase
 } from './services/db';
+import {
+  supabase,
+  UserProfile,
+  PaymentRequestRecord,
+  getOrCreateUserProfile,
+  incrementServerScanCount,
+  getUserPendingPayment
+} from './services/supabase';
 import { Navbar } from './components/Navbar';
 import type { TabType } from './components/Navbar';
 import { HomeTab } from './components/tabs/HomeTab';
@@ -30,6 +38,8 @@ import { UpgradeModal } from './components/UpgradeModal';
 import { VoiceRecorderModal } from './components/VoiceRecorderModal';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { ManualCardModal } from './components/ManualCardModal';
+import { AuthModal } from './components/AuthModal';
+import { PaymentProofModal } from './components/PaymentProofModal';
 import { ToastContainer } from './components/Toast';
 import type { ToastMessage } from './components/Toast';
 import type { StagedMediaItem } from './components/AttachedMediaSection';
@@ -40,6 +50,14 @@ export function App() {
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Supabase Auth & Cloud User State
+  const [currentUser, setCurrentUser] = useState<{ id: string; email?: string } | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [pendingPayment, setPendingPayment] = useState<PaymentRequestRecord | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isPaymentProofOpen, setIsPaymentProofOpen] = useState(false);
+  const [selectedUpgradePlan, setSelectedUpgradePlan] = useState<'monthly' | 'annual' | 'lifetime'>('annual');
 
   // Modals state
   const [isScannerOpen, setIsScannerOpen] = useState(false);
@@ -98,21 +116,72 @@ export function App() {
     }
   };
 
+  const loadUserProfileData = async (userId: string, email: string) => {
+    try {
+      const profile = await getOrCreateUserProfile(userId, email);
+      if (profile) {
+        setUserProfile(profile);
+      }
+      const pending = await getUserPendingPayment(userId);
+      setPendingPayment(pending);
+    } catch (err) {
+      console.error('Error loading Supabase profile:', err);
+    }
+  };
+
+  useEffect(() => {
+    // Check initial auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setCurrentUser({ id: session.user.id, email: session.user.email });
+        loadUserProfileData(session.user.id, session.user.email || '');
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setCurrentUser({ id: session.user.id, email: session.user.email });
+        loadUserProfileData(session.user.id, session.user.email || '');
+      } else {
+        setCurrentUser(null);
+        setUserProfile(null);
+        setPendingPayment(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   useEffect(() => {
     loadData();
   }, []);
 
-  const handleScanComplete = (scannedImage: string, ocrResult: OCRResult) => {
-    // Increment scan quota
-    const updatedQuota = incrementScansUsed();
-    setUsageStats(getUsageStats());
-    if (!usageStats.isProUser) {
-      if (updatedQuota.remaining > 0) {
-        showToast('info', `OCR Extracted! (${updatedQuota.remaining} of 10 free scans remaining)`);
-      } else {
-        showToast('info', 'You have used all 10 free scans on this device');
+  const handleScanComplete = async (scannedImage: string, ocrResult: OCRResult) => {
+    if (currentUser && userProfile) {
+      if (userProfile.plan_tier !== 'pro') {
+        const remaining = await incrementServerScanCount(currentUser.id);
+        if (remaining !== null) {
+          setUserProfile((prev) => (prev ? { ...prev, scans_used: prev.scans_used + 1 } : null));
+          if (remaining > 0) {
+            showToast('info', `OCR Extracted! (${remaining} cloud free scans left)`);
+          } else {
+            showToast('info', 'You have used all 10 free scans on your account');
+          }
+        }
+      }
+    } else {
+      // Local device quota
+      const updatedQuota = incrementScansUsed();
+      setUsageStats(getUsageStats());
+      if (!usageStats.isProUser) {
+        if (updatedQuota.remaining > 0) {
+          showToast('info', `OCR Extracted! (${updatedQuota.remaining} of 10 free scans remaining)`);
+        } else {
+          showToast('info', 'You have used all 10 free scans on this device');
+        }
       }
     }
+
     setReviewState({
       isOpen: true,
       frontImage: scannedImage,
@@ -300,9 +369,9 @@ export function App() {
               onLoadDemoData={handleLoadDemo}
               totalMediaCount={mediaItems.length}
               totalAudioCount={mediaItems.filter((m) => m.type === 'audio').length}
-              scansUsed={usageStats.scansUsed}
-              maxScans={usageStats.maxFreeScans}
-              isProUser={usageStats.isProUser}
+              scansUsed={userProfile ? userProfile.scans_used : usageStats.scansUsed}
+              maxScans={userProfile ? userProfile.max_scans : usageStats.maxFreeScans}
+              isProUser={userProfile ? userProfile.plan_tier === 'pro' : usageStats.isProUser}
               onOpenUpgrade={() => setIsUpgradeOpen(true)}
             />
           )}
@@ -336,14 +405,29 @@ export function App() {
               media={mediaItems}
               onImportBackup={handleImportBackup}
               showToast={showToast}
-              scansUsed={usageStats.scansUsed}
-              maxScans={usageStats.maxFreeScans}
-              isProUser={usageStats.isProUser}
+              scansUsed={userProfile ? userProfile.scans_used : usageStats.scansUsed}
+              maxScans={userProfile ? userProfile.max_scans : usageStats.maxFreeScans}
+              isProUser={userProfile ? userProfile.plan_tier === 'pro' : usageStats.isProUser}
               deviceId={usageStats.deviceId}
               onOpenUpgrade={() => setIsUpgradeOpen(true)}
               onResetScans={() => {
                 resetScansForTesting();
                 setUsageStats(getUsageStats());
+              }}
+              currentUser={currentUser}
+              userProfile={userProfile}
+              onOpenAuth={() => setIsAuthModalOpen(true)}
+              onSignOut={async () => {
+                await supabase.auth.signOut();
+                showToast('info', 'Signed out successfully');
+              }}
+              onOpenPaymentProof={() => {
+                if (!currentUser) {
+                  setIsAuthModalOpen(true);
+                  showToast('info', 'Please sign in first to submit payment proof');
+                } else {
+                  setIsPaymentProofOpen(true);
+                }
               }}
             />
           )}
@@ -356,7 +440,7 @@ export function App() {
           cardsCount={cards.length}
         />
 
-        {/* Camera Scanner Modal (Auto-Capture is OFF by default) */}
+        {/* Camera Scanner Modal */}
         <ScannerModal
           isOpen={isScannerOpen}
           onClose={() => setIsScannerOpen(false)}
@@ -376,7 +460,7 @@ export function App() {
           defaultBlockName={settings.defaultBlockName}
         />
 
-        {/* Review & Edit Scanned Card Modal (With WhatsApp, WeChat & Media Block Before Saving) */}
+        {/* Review & Edit Scanned Card Modal */}
         {reviewState?.isOpen && (
           <ReviewCardModal
             isOpen={reviewState.isOpen}
@@ -388,25 +472,32 @@ export function App() {
           />
         )}
 
-        {/* Contact Details & Edit Modal (With WhatsApp, WeChat & Media Block After Saving) */}
-        <CardDetailModal
-          card={selectedCard}
-          isOpen={!!selectedCard}
-          onClose={() => setSelectedCard(null)}
-          onDelete={handleDeleteCard}
-          onUpdate={handleUpdateCard}
-          associatedMedia={associatedMediaForSelected}
-          onAddMedia={handleAddMedia}
-          onDeleteMedia={handleDeleteMedia}
-        />
+        {/* Card Full Details & Media Attachments Modal */}
+        {selectedCard && (
+          <CardDetailModal
+            card={selectedCard}
+            isOpen={!!selectedCard}
+            onClose={() => setSelectedCard(null)}
+            onDelete={handleDeleteCard}
+            onUpdate={handleUpdateCard}
+            associatedMedia={associatedMediaForSelected}
+            onAddMedia={handleAddMedia}
+            onDeleteMedia={handleDeleteMedia}
+          />
+        )}
 
-        {/* Quick Attach Media Modal (For list view "Attach Media" button) */}
-        <QuickAttachModal
-          card={quickAttachCard}
-          isOpen={!!quickAttachCard}
-          onClose={() => setQuickAttachCard(null)}
-          onAddMedia={handleAddMedia}
-        />
+        {/* 1-Tap Quick Attach Modal from Contact List */}
+        {quickAttachCard && (
+          <QuickAttachModal
+            card={quickAttachCard}
+            isOpen={!!quickAttachCard}
+            onClose={() => setQuickAttachCard(null)}
+            onAddMedia={(newMedia: MediaItem) => {
+              handleAddMedia(newMedia);
+              showToast('success', `Attached to ${quickAttachCard.name}`);
+            }}
+          />
+        )}
 
         {/* Global 1-Tap Voice Recorder Modal */}
         <VoiceRecorderModal
@@ -444,12 +535,13 @@ export function App() {
           }}
           title="Add Photo"
         />
+
         {/* Subscription / 10 Free Scans Paywall Modal */}
         <UpgradeModal
           isOpen={isUpgradeOpen}
           onClose={() => setIsUpgradeOpen(false)}
-          scansUsed={usageStats.scansUsed}
-          maxScans={usageStats.maxFreeScans}
+          scansUsed={userProfile ? userProfile.scans_used : usageStats.scansUsed}
+          maxScans={userProfile ? userProfile.max_scans : usageStats.maxFreeScans}
           onUpgradeSimulated={() => {
             setProUserStatus(true);
             setUsageStats(getUsageStats());
@@ -460,7 +552,44 @@ export function App() {
             setIsUpgradeOpen(false);
             setActiveTab('settings');
           }}
+          onOpenPaymentProof={(plan) => {
+            setIsUpgradeOpen(false);
+            setSelectedUpgradePlan(plan);
+            if (!currentUser) {
+              setIsAuthModalOpen(true);
+              showToast('info', 'Please sign in first to submit payment proof');
+            } else {
+              setIsPaymentProofOpen(true);
+            }
+          }}
+          pendingPayment={pendingPayment}
         />
+
+        {/* Passwordless 6-Digit Email OTP Auth Modal */}
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onAuthSuccess={(user) => {
+            setCurrentUser({ id: user.id, email: user.email });
+            loadUserProfileData(user.id, user.email || '');
+            showToast('success', `Signed in as ${user.email}`);
+          }}
+        />
+
+        {/* Manual Bank / Wallet Transfer Proof Modal */}
+        {currentUser && (
+          <PaymentProofModal
+            isOpen={isPaymentProofOpen}
+            onClose={() => setIsPaymentProofOpen(false)}
+            userId={currentUser.id}
+            userEmail={currentUser.email || ''}
+            selectedPlan={selectedUpgradePlan}
+            onSubmitted={() => {
+              loadUserProfileData(currentUser.id, currentUser.email || '');
+              showToast('success', 'Payment proof submitted! Admin will verify shortly.');
+            }}
+          />
+        )}
       </div>
     </div>
   );
