@@ -29,6 +29,7 @@ import { QuickAttachModal } from './components/QuickAttachModal';
 import { UpgradeModal } from './components/UpgradeModal';
 import { VoiceRecorderModal } from './components/VoiceRecorderModal';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
+import { ManualCardModal } from './components/ManualCardModal';
 import { ToastContainer } from './components/Toast';
 import type { ToastMessage } from './components/Toast';
 import type { StagedMediaItem } from './components/AttachedMediaSection';
@@ -42,6 +43,7 @@ export function App() {
 
   // Modals state
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [reviewState, setReviewState] = useState<{
     isOpen: boolean;
     frontImage: string;
@@ -294,6 +296,7 @@ export function App() {
               onOpenAddPhoto={() => setIsAddPhotoOpen(true)}
               onOpenCardDetail={(card) => setSelectedCard(card)}
               onOpenQuickAttach={(card) => setQuickAttachCard(card)}
+              onOpenManualEntry={() => setIsManualModalOpen(true)}
               onLoadDemoData={handleLoadDemo}
               totalMediaCount={mediaItems.length}
               totalAudioCount={mediaItems.filter((m) => m.type === 'audio').length}
@@ -310,6 +313,7 @@ export function App() {
               onOpenCardDetail={(card) => setSelectedCard(card)}
               onOpenQuickAttach={(card) => setQuickAttachCard(card)}
               onOpenScanner={() => setIsScannerOpen(true)}
+              onOpenManualEntry={() => setIsManualModalOpen(true)}
             />
           )}
 
@@ -361,6 +365,15 @@ export function App() {
           modelName={settings.geminiModel}
           autoCaptureDefault={settings.autoCaptureEnabled}
           onLimitReached={() => setIsUpgradeOpen(true)}
+          onOpenManualEntry={() => setIsManualModalOpen(true)}
+        />
+
+        {/* Manual Card Entry Modal (Offline / No AI required) */}
+        <ManualCardModal
+          isOpen={isManualModalOpen}
+          onClose={() => setIsManualModalOpen(false)}
+          onSave={handleSaveCard}
+          defaultBlockName={settings.defaultBlockName}
         />
 
         {/* Review & Edit Scanned Card Modal (With WhatsApp, WeChat & Media Block Before Saving) */}

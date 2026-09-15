@@ -1,20 +1,22 @@
 import { BusinessCardItem } from '../BusinessCardItem';
 import React, { useState, useMemo } from 'react';
 import type { BusinessCard } from '../../types';
-import { Search, ArrowUpDown, Plus, Eye, Paperclip, MessageCircle } from 'lucide-react';
+import { Search, ArrowUpDown, Plus, Eye, Paperclip, MessageCircle, UserPlus } from 'lucide-react';
 
 interface ContactsTabProps {
   cards: BusinessCard[];
   onOpenCardDetail: (card: BusinessCard) => void;
   onOpenQuickAttach: (card: BusinessCard) => void;
   onOpenScanner: () => void;
+  onOpenManualEntry?: () => void;
 }
 
 export const ContactsTab: React.FC<ContactsTabProps> = ({
   cards,
   onOpenCardDetail,
   onOpenQuickAttach,
-  onOpenScanner
+  onOpenScanner,
+  onOpenManualEntry
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBlock, setSelectedBlock] = useState<string>('ALL');
@@ -63,12 +65,25 @@ export const ContactsTab: React.FC<ContactsTabProps> = ({
           <h1 className="font-syne text-xl font-bold text-[#181716]">All Contacts</h1>
           <p className="text-xs text-[#7C7875]">{cards.length} saved business cards</p>
         </div>
-        <button
-          onClick={onOpenScanner}
-          className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#FF5722] to-[#FF4500] hover:opacity-95 text-white font-syne font-bold text-xs rounded-full shadow-solar transition-transform active:scale-95"
-        >
-          <Plus className="w-4 h-4" /> Scan Card
-        </button>
+        <div className="flex items-center gap-2">
+          {onOpenManualEntry && (
+            <button
+              type="button"
+              onClick={onOpenManualEntry}
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-[#F8F6F4] hover:bg-[#EDE8E1] border border-[#EDE8E1] text-[#181716] font-condensed font-bold text-xs rounded-full shadow-porcelain-sm transition-transform active:scale-95"
+              title="Add contact manually without AI or camera"
+            >
+              <UserPlus className="w-3.5 h-3.5 text-[#FF5722]" />
+              <span>+ Manual</span>
+            </button>
+          )}
+          <button
+            onClick={onOpenScanner}
+            className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#FF5722] to-[#FF4500] hover:opacity-95 text-white font-condensed font-bold text-xs rounded-full shadow-solar transition-transform active:scale-95"
+          >
+            <Plus className="w-4 h-4" /> Scan Card
+          </button>
+        </div>
       </div>
 
       <div className="relative">

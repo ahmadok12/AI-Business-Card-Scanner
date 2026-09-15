@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Camera, SwitchCamera, Zap, ZapOff, Upload, X, Loader2, Sparkles, AlertCircle } from 'lucide-react';
+import { Camera, SwitchCamera, Zap, ZapOff, Upload, X, Loader2, Sparkles, AlertCircle, PenLine } from 'lucide-react';
 import { processCardWithGemini } from '../services/gemini';
 import { getUsageStats } from '../services/db';
 import { OCRResult } from '../types';
@@ -13,6 +13,7 @@ interface ScannerModalProps {
   autoCaptureDefault?: boolean;
   autoCaptureHoldTime?: number;
   onLimitReached?: () => void;
+  onOpenManualEntry?: () => void;
 }
 
 export const ScannerModal: React.FC<ScannerModalProps> = ({
@@ -23,7 +24,8 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
   modelName,
   autoCaptureDefault = false,
   autoCaptureHoldTime = 1.2,
-  onLimitReached
+  onLimitReached,
+  onOpenManualEntry
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -279,6 +281,20 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {onOpenManualEntry && (
+            <button
+              onClick={() => {
+                onClose();
+                onOpenManualEntry();
+              }}
+              className="px-3 py-1 rounded-full text-xs font-grotesk font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/15 flex items-center gap-1.5 transition-colors"
+              title="Add card info manually without AI or camera"
+            >
+              <PenLine className="w-3.5 h-3.5 text-[#FF5722]" />
+              <span>Manual Entry</span>
+            </button>
+          )}
+
           <button
             onClick={() => {
               setIsAutoCapture(!isAutoCapture);
@@ -369,15 +385,21 @@ export const ScannerModal: React.FC<ScannerModalProps> = ({
                 </button>
               )}
 
-              {capturedImageForRetry && (
-                <button
-                  type="button"
-                  onClick={handleProceedManually}
-                  className="w-full py-2.5 bg-white/10 hover:bg-white/15 text-white font-grotesk font-semibold text-xs rounded-full transition-all"
-                >
-                  Enter Details Manually
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  if (onOpenManualEntry) {
+                    onOpenManualEntry();
+                  } else {
+                    handleProceedManually();
+                  }
+                }}
+                className="w-full py-2.5 bg-white/10 hover:bg-white/15 text-white font-grotesk font-semibold text-xs rounded-full transition-all flex items-center justify-center gap-1.5"
+              >
+                <PenLine className="w-3.5 h-3.5 text-[#FF5722]" />
+                <span>Enter Details Manually (Offline)</span>
+              </button>
 
               <button
                 type="button"

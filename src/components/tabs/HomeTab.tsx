@@ -1,11 +1,12 @@
 import { BusinessCardItem } from '../BusinessCardItem';
 import React from 'react';
 import type { BusinessCard } from '../../types';
-import { Sparkles, Eye, Paperclip, Camera, Mic, Image as ImageIcon, MessageCircle } from 'lucide-react';
+import { Sparkles, Eye, Paperclip, Camera, Mic, Image as ImageIcon, MessageCircle, UserPlus } from 'lucide-react';
 
 interface HomeTabProps {
   cards: BusinessCard[];
   onOpenScanner: () => void;
+  onOpenManualEntry: () => void;
   onOpenVoiceRecorder: () => void;
   onOpenAddPhoto: () => void;
   onOpenCardDetail: (card: BusinessCard) => void;
@@ -22,6 +23,7 @@ interface HomeTabProps {
 export const HomeTab: React.FC<HomeTabProps> = ({
   cards,
   onOpenScanner,
+  onOpenManualEntry,
   onOpenVoiceRecorder,
   onOpenAddPhoto,
   onOpenCardDetail,
@@ -93,10 +95,10 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         <h2 className="text-[11px] font-bold text-[#7C7875] uppercase tracking-wider mb-2.5 px-1">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <button
             onClick={onOpenScanner}
-            className="flex flex-col items-center justify-center p-3.5 bg-white hover:bg-[#F8F6F4] border border-[#EDE8E1] hover:border-[#FF5722]/40 rounded-[20px] shadow-porcelain-sm transition-all active:scale-95 group text-center"
+            className="flex flex-col items-center justify-center p-3 sm:p-3.5 bg-white hover:bg-[#F8F6F4] border border-[#EDE8E1] hover:border-[#FF5722]/40 rounded-[20px] shadow-porcelain-sm transition-all active:scale-95 group text-center"
           >
             <div className="w-10 h-10 rounded-2xl bg-[#FFF0EB] group-hover:bg-[#FF5722] text-[#FF5722] group-hover:text-white flex items-center justify-center mb-1.5 transition-colors shadow-2xs">
               <Camera className="w-5 h-5" />
@@ -106,8 +108,19 @@ export const HomeTab: React.FC<HomeTabProps> = ({
           </button>
 
           <button
+            onClick={onOpenManualEntry}
+            className="flex flex-col items-center justify-center p-3 sm:p-3.5 bg-white hover:bg-[#F8F6F4] border border-[#EDE8E1] hover:border-[#FF5722]/40 rounded-[20px] shadow-porcelain-sm transition-all active:scale-95 group text-center"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-[#FFF0EB] group-hover:bg-[#FF5722] text-[#FF5722] group-hover:text-white flex items-center justify-center mb-1.5 transition-colors shadow-2xs">
+              <UserPlus className="w-5 h-5" />
+            </div>
+            <span className="text-xs font-bold text-[#181716]">Manual Entry</span>
+            <span className="text-[10px] text-[#FF5722] font-semibold">Offline / No AI</span>
+          </button>
+
+          <button
             onClick={onOpenVoiceRecorder}
-            className="flex flex-col items-center justify-center p-3.5 bg-white hover:bg-[#F8F6F4] border border-[#EDE8E1] hover:border-[#FF5722]/40 rounded-[20px] shadow-porcelain-sm transition-all active:scale-95 group text-center"
+            className="flex flex-col items-center justify-center p-3 sm:p-3.5 bg-white hover:bg-[#F8F6F4] border border-[#EDE8E1] hover:border-[#FF5722]/40 rounded-[20px] shadow-porcelain-sm transition-all active:scale-95 group text-center"
           >
             <div className="w-10 h-10 rounded-2xl bg-[#FFF0EB] group-hover:bg-[#FF5722] text-[#FF5722] group-hover:text-white flex items-center justify-center mb-1.5 transition-colors shadow-2xs">
               <Mic className="w-5 h-5" />
@@ -118,7 +131,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
 
           <button
             onClick={onOpenAddPhoto}
-            className="flex flex-col items-center justify-center p-3.5 bg-white hover:bg-[#F8F6F4] border border-[#EDE8E1] hover:border-[#FF5722]/40 rounded-[20px] shadow-porcelain-sm transition-all active:scale-95 group text-center"
+            className="flex flex-col items-center justify-center p-3 sm:p-3.5 bg-white hover:bg-[#F8F6F4] border border-[#EDE8E1] hover:border-[#FF5722]/40 rounded-[20px] shadow-porcelain-sm transition-all active:scale-95 group text-center"
           >
             <div className="w-10 h-10 rounded-2xl bg-[#FFF0EB] group-hover:bg-[#FF5722] text-[#FF5722] group-hover:text-white flex items-center justify-center mb-1.5 transition-colors shadow-2xs">
               <ImageIcon className="w-5 h-5" />
